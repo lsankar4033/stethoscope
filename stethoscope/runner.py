@@ -13,13 +13,11 @@ class Rumor(object):
     _unique_call_id_counter: int
 
     actors: Dict[str, "Actor"]
-    out_q: AsyncQueue  # commands to send to rumor
 
     def __init__(self):
         self.calls = {}
         self.actors = {}
         self._unique_call_id_counter = 0
-        self.out_q = AsyncQueue()
 
     async def start(self):
         print("starting")
