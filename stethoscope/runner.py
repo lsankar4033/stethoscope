@@ -69,6 +69,7 @@ class Rumor(object):
         async def debug_loop(ru: Rumor):
             while True:
                 line = await ru.rumor_process.stderr.readline()
+                line = line.decode('utf-8')
                 if line.endswith('\n'):
                     line = line[:-1]
                 print(f"ERROR from Rumor: '{line}'")
