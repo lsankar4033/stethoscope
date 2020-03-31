@@ -6,8 +6,23 @@ import os
 import pytest
 
 from stethoscope.clients import LighthouseClient
-from stethoscope.constants import GENESIS_FORK_VERSION, GENESIS_ROOT
-from stethoscope.types import Status
+from stethoscope.types import *
+
+# TODO: might want more control here in the future
+GENESIS_ROOT = b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
+
+
+class Status(Container):
+    version: Bytes4
+    finalized_root: Bytes32
+    finalized_epoch: uint64
+    head_root: Bytes32
+    head_slot: uint64
+
+
+# NOTE: test method to build a BeaconState genesis file
+def build_genesis_file():
+    pass
 
 
 # TODO: put this in a test sync rpc fixture or smth
