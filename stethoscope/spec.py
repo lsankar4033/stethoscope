@@ -4,6 +4,100 @@ from eth2spec.utils.ssz.ssz_typing import (
 )
 
 
+# NOTE: all of the following code taken from pyspec + test helpers
+
+
+def build_deposit_data(spec, pubkey, privkey, amount, withdrawal_credentials, signed=False):
+    deposit_data = spec.DepositData(
+        pubkey=pubkey,
+        withdrawal_credentials=withdrawal_credentials,
+        amount=amount,
+    )
+    if signed:
+        sign_deposit_data(spec, deposit_data, privkey)
+    return deposit_data
+
+
+def build_deposit(spec,
+                  deposit_data_list,
+                  pubkey,
+                  privkey,
+                  amount,
+                  withdrawal_credentials,
+                  signed):
+    deposit_data = build_deposit_data(spec, pubkey, privkey, amount, withdrawal_credentials, signed=signed)
+    index = len(deposit_data_list)
+    deposit_data_list.append(deposit_data)
+    return deposit_from_context(spec, deposit_data_list, index)
+
+
+def deposit_from_context(spec, deposit_data_list, index):
+    deposit_data = deposit_data_list[index]
+    root = hash_tree_root(List[spec.DepositData, 2**spec.DEPOSIT_CONTRACT_TREE_DEPTH](*deposit_data_list))
+    tree = calc_merkle_tree_from_leaves(tuple([d.hash_tree_root() for d in deposit_data_list]))
+    proof = list(get_merkle_proof(tree, item_index=index, tree_len=32)) + [(index + 1).to_bytes(32, 'little')]
+    leaf = deposit_data.hash_tree_root()
+    assert spec.is_valid_merkle_branch(leaf, proof, spec.DEPOSIT_CONTRACT_TREE_DEPTH + 1, index, root)
+    deposit = spec.Deposit(proof=proof, data=deposit_data)
+
+    return deposit, root, deposit_data_list
+
+
+def prepare_genesis_deposits(spec, genesis_validator_count, amount, signed=False, deposit_data_list=None):
+    if deposit_data_list is None:
+        deposit_data_list = []
+    genesis_deposits = []
+    for validator_index in range(genesis_validator_count):
+        pubkey = pubkeys[validator_index]
+        privkey = privkeys[validator_index]
+        # insecurely use pubkey as withdrawal key if no credentials provided
+        withdrawal_credentials = spec.BLS_WITHDRAWAL_PREFIX + spec.hash(pubkey)[1:]
+        deposit, root, deposit_data_list = build_deposit(
+            spec,
+            deposit_data_list,
+            pubkey,
+            privkey,
+            amount,
+            withdrawal_credentials,
+            signed,
+        )
+        genesis_deposits.append(deposit)
+
+    return genesis_deposits, root, deposit_data_list
+
+
+def build_genesis_state():
+    # NOTE: taken from pyspec
+    eth1_block_hash = b'\x12' * 32
+    eth1_timestamp = MIN_GENESIS_TIME
+
+    deposits, deposit_root, _ = prepare_genesis_deposits(
+        spec, MIN_GENESIS_ACTIVE_VALIDATOR_COUNT, MAX_EFFECTIVE_BALANCE, signed=True)
+
+    fork = Fork(
+        previous_version=GENESIS_FORK_VERSION,
+        current_version=GENESIS_FORK_VERSION,
+        epoch=GENESIS_EPOCH,
+    )
+
+    beacon_block = BeaconBlockBody()
+
+    state = BeaconState(
+        genesis_time=eth1_timestamp - eth1_timestamp % MIN_GENESIS_DELAY + 2 * MIN_GENESIS_DELAY,
+        fork=fork,
+        eth1_data=Eth1Data(block_hash=eth1_block_hash, deposit_count=0),
+        latest_block_header=BeaconBlockHeader(body_root=beacon_block.hash_tree_root()),
+        randao_mixes=[eth1_block_hash] * EPOCHS_PER_HISTORICAL_VECTOR,  # Seed RANDAO with Eth1 entropy
+    )
+
+    # TODO: process deposits
+
+    return state
+
+
+# NOTE: actual type code follows
+
+
 class Slot(uint64):
     pass
 
