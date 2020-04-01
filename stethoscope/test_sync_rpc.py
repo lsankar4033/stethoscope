@@ -1,15 +1,37 @@
+from eth2spec.test.helpers.deposits import prepare_genesis_deposits
+from eth2spec.utils.ssz.ssz_typing import (
+    Bytes4, Bytes32, Container, uint64
+)
+from eth2spec.phase0.spec import initialize_beacon_state_from_eth1
+
+from eth2spec.utils.ssz.ssz_impl import hash_tree_root
+
 from pyrum import Rumor
+from hashlib import sha256
 
 import asyncio
 import io
 import os
 import pytest
 
-from stethoscope.clients import LighthouseClient
-from stethoscope.types import *
+import stethoscope.minimal_spec as spec
 
-# TODO: might want more control here in the future
-GENESIS_ROOT = b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
+from stethoscope.clients import LighthouseClient
+
+
+def build_genesis_state():
+    # NOTE: taken from pyspec
+    eth1_block_hash = b'\x12' * 32
+    eth1_timestamp = spec.MIN_GENESIS_TIME
+
+    deposits, deposit_root, _ = prepare_genesis_deposits(
+        spec, spec.MIN_GENESIS_ACTIVE_VALIDATOR_COUNT, spec.MAX_EFFECTIVE_BALANCE, signed=True)
+
+    state = initialize_beacon_state_from_eth1(eth1_block_hash, eth1_timestamp, deposits)
+
+    return state
+
+# TODO: move to reqresp file or something
 
 
 class Status(Container):
@@ -20,9 +42,8 @@ class Status(Container):
     head_slot: uint64
 
 
-# NOTE: test method to build a BeaconState genesis file
-def build_genesis_file():
-    pass
+# TODO: might want more control here in the future
+GENESIS_ROOT = b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
 
 
 # TODO: put this in a test sync rpc fixture or smth
