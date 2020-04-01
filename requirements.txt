@@ -21,4 +21,5 @@ stethoscope==0.0.1
 toolz==0.10.0
 wcwidth==0.1.8
 zipp==3.1.0
-git+https://github.com/ethereum/eth2.0-specs@v0.11.0
+git+https://github.com/ethereum/eth2.0-specs@v0.11.1
+git+https://github.com/protolambda/eth2fastspec.git
