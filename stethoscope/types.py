@@ -48,6 +48,7 @@ class BLSSignature(Bytes96):
     pass
 
 
+# NOTE: this is mainnet spec. Should be minimal
 ########
 # Config
 ########
@@ -58,33 +59,21 @@ BASE_REWARDS_PER_EPOCH = 4
 DEPOSIT_CONTRACT_TREE_DEPTH = 2**5
 JUSTIFICATION_BITS_LENGTH = 4
 ENDIANNESS = 'little'
-MAX_COMMITTEES_PER_SLOT = 2**6
-TARGET_COMMITTEE_SIZE = 2**7
 MAX_VALIDATORS_PER_COMMITTEE = 2**11
 MIN_PER_EPOCH_CHURN_LIMIT = 2**2
 CHURN_LIMIT_QUOTIENT = 2**16
-SHUFFLE_ROUND_COUNT = 90
-MIN_GENESIS_ACTIVE_VALIDATOR_COUNT = 2**14
 MIN_GENESIS_TIME = 1578009600
 MIN_DEPOSIT_AMOUNT = Gwei(2**0 * 10**9)
 MAX_EFFECTIVE_BALANCE = Gwei(2**5 * 10**9)
 EJECTION_BALANCE = Gwei(2**4 * 10**9)
 EFFECTIVE_BALANCE_INCREMENT = Gwei(2**0 * 10**9)
-GENESIS_FORK_VERSION = Version('0x00000000')
 BLS_WITHDRAWAL_PREFIX = Bytes1('0x00')
-MIN_GENESIS_DELAY = 86400
-SECONDS_PER_SLOT = 12
 MIN_ATTESTATION_INCLUSION_DELAY = 2**0
-SLOTS_PER_EPOCH = 2**5
 MIN_SEED_LOOKAHEAD = 2**0
 MAX_SEED_LOOKAHEAD = 2**2
 MIN_EPOCHS_TO_INACTIVITY_PENALTY = 2**2
 SLOTS_PER_ETH1_VOTING_PERIOD = 2**10
-SLOTS_PER_HISTORICAL_ROOT = 2**13
 MIN_VALIDATOR_WITHDRAWABILITY_DELAY = 2**8
-PERSISTENT_COMMITTEE_PERIOD = 2**11
-EPOCHS_PER_HISTORICAL_VECTOR = 2**16
-EPOCHS_PER_SLASHINGS_VECTOR = 2**13
 HISTORICAL_ROOTS_LIMIT = 2**24
 VALIDATOR_REGISTRY_LIMIT = 2**40
 BASE_REWARD_FACTOR = 2**6
@@ -103,11 +92,33 @@ DOMAIN_RANDAO = DomainType('0x02000000')
 DOMAIN_DEPOSIT = DomainType('0x03000000')
 DOMAIN_VOLUNTARY_EXIT = DomainType('0x04000000')
 SAFE_SLOTS_TO_UPDATE_JUSTIFIED = 2**3
-ETH1_FOLLOW_DISTANCE = 2**10
 TARGET_AGGREGATORS_PER_COMMITTEE = 2**4
 RANDOM_SUBNETS_PER_VALIDATOR = 2**0
 EPOCHS_PER_RANDOM_SUBNET_SUBSCRIPTION = 2**8
 SECONDS_PER_ETH1_BLOCK = 14
+
+GENESIS_EPOCH = Epoch(0)
+
+# made minimal
+GENESIS_FORK_VERSION = Version('0x00000001')
+MIN_GENESIS_DELAY = 300
+MAX_COMMITTEES_PER_SLOT = 4
+TARGET_COMMITTEE_SIZE = 4
+SHUFFLE_ROUND_COUNT = 10
+MIN_GENESIS_ACTIVE_VALIDATOR_COUNT = 64
+ETH1_FOLLOW_DISTANCE = 16
+SECONDS_PER_SLOT = 6
+SLOTS_PER_EPOCH = 8
+EPOCHS_PER_ETH1_VOTING_PERIOD = 2
+SLOTS_PER_HISTORICAL_ROOT = 64
+PERSISTENT_COMMITTEE_PERIOD = 128
+MAX_EPOCHS_PER_CROSSLINK = 4
+EPOCHS_PER_HISTORICAL_VECTOR = 64
+EPOCHS_PER_SLASHINGS_VECTOR = 64
+PHASE_1_FORK_VERSION = 0x01000001
+INITIAL_ACTIVE_SHARDS = 4
+MAX_SHARDS = 8
+EARLY_DERIVED_SECRET_PENALTY_MAX_FUTURE_EPOCHS = 4096
 
 
 class Fork(Container):
@@ -213,6 +224,27 @@ class VoluntaryExit(Container):
     validator_index: ValidatorIndex
 
 
+class SignedBeaconBlockHeader(Container):
+    message: BeaconBlockHeader
+    signature: BLSSignature
+
+
+class ProposerSlashing(Container):
+    proposer_index: ValidatorIndex
+    signed_header_1: SignedBeaconBlockHeader
+    signed_header_2: SignedBeaconBlockHeader
+
+
+class VoluntaryExit(Container):
+    epoch: Epoch  # Earliest epoch when voluntary exit can be processed
+    validator_index: ValidatorIndex
+
+
+class SignedVoluntaryExit(Container):
+    message: VoluntaryExit
+    signature: BLSSignature
+
+
 class BeaconState(Container):
     # Versioning
     genesis_time: uint64
@@ -242,3 +274,15 @@ class BeaconState(Container):
     previous_justified_checkpoint: Checkpoint  # Previous epoch snapshot
     current_justified_checkpoint: Checkpoint
     finalized_checkpoint: Checkpoint
+
+
+class BeaconBlockBody(Container):
+    randao_reveal: BLSSignature
+    eth1_data: Eth1Data  # Eth1 data vote
+    graffiti: Bytes32  # Arbitrary data
+    # Operations
+    proposer_slashings: List[ProposerSlashing, MAX_PROPOSER_SLASHINGS]
+    attester_slashings: List[AttesterSlashing, MAX_ATTESTER_SLASHINGS]
+    attestations: List[Attestation, MAX_ATTESTATIONS]
+    deposits: List[Deposit, MAX_DEPOSITS]
+    voluntary_exits: List[SignedVoluntaryExit, MAX_VOLUNTARY_EXITS]
