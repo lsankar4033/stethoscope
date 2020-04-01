@@ -16,8 +16,6 @@ pytest==5.4.1
 pytest-asyncio==0.10.0
 remerkleable==0.1.12
 six==1.14.0
-ssz==0.2.3
-stethoscope==0.0.1
 toolz==0.10.0
 wcwidth==0.1.8
 zipp==3.1.0
