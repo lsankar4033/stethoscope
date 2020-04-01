@@ -1,13 +1,10 @@
-import eth2fastspec as spec
+from eth2spec.config.config_util import prepare_config
+prepare_config('./config', 'minimal')
 
 from eth2spec.phase0.spec import initialize_beacon_state_from_eth1
 from eth2spec.test.helpers.deposits import prepare_genesis_deposits
-from eth2spec.config.config_util import prepare_config
 
-from importlib import reload
-
-prepare_config('./config', 'minimal')
-reload(spec)
+import eth2fastspec as spec
 
 
 def write_genesis_state():
