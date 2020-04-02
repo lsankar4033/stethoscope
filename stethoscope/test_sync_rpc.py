@@ -9,8 +9,39 @@ import io
 import os
 import pytest
 
+from stethoscope.clients import build_client
+from stethoscope.genesis_state import write_genesis_state
 
-from stethoscope.clients import LighthouseClient
+
+GENESIS_PATH = 'ssz/genesis.ssz'
+
+
+@pytest.fixture(scope='session')
+def genesis_ssz_file(request):
+    print(f'writing new genesis file at {GENESIS_PATH}')
+    write_genesis_state(GENESIS_PATH)
+
+    def cleanup():
+        print(f'cleaning up genesis file at {GENESIS_PATH}')
+        os.remove(GENESIS_PATH)
+
+    request.addfinalizer(cleanup)
+
+    return GENESIS_PATH
+
+# NOTE: this isn't the right abstraction when we consider multiple genesis files and more complicated (i.e.
+# write tests)
+@pytest.fixture(scope='session', params=['lighthouse'])
+def rumor_and_client(request, genesis_path):
+    client = build_client(genesis_path, request.param)
+
+    def cleanup():
+        print(f'closing client of type {request.param}')
+        # TODO: how do I deal with async here? Think about trio + pytest
+
+    # TODO: create rumor instance attached to this client!
+
+    return client
 
 
 class Status(Container):
