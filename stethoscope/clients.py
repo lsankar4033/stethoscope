@@ -1,6 +1,8 @@
-import asyncio
+import shlex
+import subprocess
 
 
+# NOTE: synchronous so that it can be used across multiple fixtures
 class LighthouseClient:
     """
     Creates a lighthouse client seeded with a specific genesis file and with a predictable ENR.
@@ -19,22 +21,26 @@ class LighthouseClient:
     def enr(self):
         return '-Iu4QIS99y_PyET83eyeAsS463grgYSm1tY6KaVljNjMMZhfFbqo2X0lXe8Lu19O_njq3-EZV9_dhiun5dJ4jOp5uVIBgmlkgnY0gmlwhH8AAAGJc2VjcDI1NmsxoQOnBq2PcxFfkFACZvJz91cd-UKaTPtLv7zYJSJyAtq60YN0Y3CCIyiDdWRwgiMo'
 
-    # TODO: add genesis file
     # TODO: replace with docker cmd when I put in Travis
-    def _run_cmd(self):
-        return f'lighthouse bn --listen-address {self.address} --port {self.port} --p2p-priv-key {self.privkey} testnet -r quick 8 $(date +%s)'
+    def _run_args(self):
+        return ['lighthouse', 'bn',
+                '--listen-address', f'{self.address}',
+                '--port', f'{self.port}',
+                '--p2p-priv-key', f'{self.privkey}',
+                'testnet' '-r'
+                'file', 'ssz', f'{self.genesis_path}']
 
-    async def start(self):
-        self.process = await asyncio.create_subprocess_shell(self._run_cmd())
+    # NOTE: if we want to expose client logs, we'd do so via stdout here
+    def start(self):
+        self.process = subprocess.Popen(self._run_args())
 
-    async def stop(self):
+    def stop(self):
         if self.process is None:
             return
 
         self.process.terminate()
-        await self.process.wait()
 
 
 def build_client(client_type, genesis_path):
-    # TODO: switch on client_type
+    # TODO: switch on client_type, maybe an enum
     return LighthouseClient(genesis_path)
