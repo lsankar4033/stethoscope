@@ -58,9 +58,9 @@ async def rumor(client):
 
 
 # NOTE: temporary test to make sure docker works as expected in Travis CI
-async def test_docker():
+async def test_docker_pull():
     import subprocess
-    out = subprocess.run(['docker', 'ps'], capture_output=True)
+    out = subprocess.run(['docker', 'run', 'sigp/lighthouse', 'lighthouse', '--help'], capture_output=True)
     print(out)
     assert True
 
