@@ -60,7 +60,7 @@ async def rumor(client):
 # NOTE: temporary test to make sure docker works as expected in Travis CI
 async def test_docker():
     import subprocess
-    out = subprocess.run(['docker', 'ps'], capture_output)
+    out = subprocess.run(['docker', 'ps'], capture_output=True)
     print(out)
     assert True
 
