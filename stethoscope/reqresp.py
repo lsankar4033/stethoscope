@@ -6,7 +6,6 @@ from eth2spec.utils.ssz.ssz_typing import (
 
 
 class Status(Container):
-    # TODO: move to reqresp file or something
     version: Bytes4
     finalized_root: Bytes32
     finalized_epoch: uint64
