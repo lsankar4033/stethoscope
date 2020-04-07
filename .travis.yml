@@ -9,7 +9,7 @@ services:
 before_install:
   - pip install -U pip
   - pip install -U pytest
-  - docker pull sigp/lighthouse
+  - docker pull sigp/lighthouse:latest
 
 install:
   - pip install -r requirements.txt
