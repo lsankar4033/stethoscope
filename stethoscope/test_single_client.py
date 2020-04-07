@@ -2,11 +2,9 @@ from pyrum import Rumor
 
 import os
 import pytest
-import trio
 
 from stethoscope.clients import build_client
 from stethoscope.genesis_state import write_genesis_state
-
 
 GENESIS_PATH = 'ssz/genesis.ssz'
 
@@ -49,7 +47,7 @@ async def rumor(client):
     print('starting rumor instance')
     async with Rumor(cmd='rumor') as rumor:
         await rumor.host.start()
-        await rumor.host.listen(tcp=9000)
+        await rumor.host.listen(tcp=9001)
         print('set up rumor instance')
 
         print(f'attempting to connect to client with ENR {client.enr()}')
@@ -59,10 +57,21 @@ async def rumor(client):
         yield rumor
 
 
-async def test_status(rumor):
+# NOTE: temporary test to make sure docker works as expected in Travis CI
+async def test_docker():
+    import subprocess
+    out = subprocess.run(['docker', 'ps'], capture_output)
+    print(out)
+    assert True
+
+
+# async def test_client_startup(client):
+    #assert client.is_running()
+
+# async def test_status_rpc(rumor):
     # async with rumor (decorator)
     # connect rumor <-> client (helper fn?)
     # try status message on rumor
     # check response
-    print(f'Rumor: {rumor}')
-    assert True
+    #print(f'Rumor: {rumor}')
+    #assert True
