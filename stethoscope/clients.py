@@ -27,7 +27,7 @@ class LighthouseClient:
                 '--listen-address', f'{self.address}',
                 '--port', f'{self.port}',
                 '--p2p-priv-key', f'{self.privkey}',
-                'testnet' '-r'
+                'testnet', '-r',
                 'file', 'ssz', f'{self.genesis_path}']
 
     # NOTE: if we want to expose client logs, we'd do so via stdout here
