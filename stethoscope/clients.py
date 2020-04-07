@@ -19,7 +19,7 @@ class LighthouseClient:
 
     # TODO: compute from our own parameters
     def enr(self):
-        return '-Iu4QIS99y_PyET83eyeAsS463grgYSm1tY6KaVljNjMMZhfFbqo2X0lXe8Lu19O_njq3-EZV9_dhiun5dJ4jOp5uVIBgmlkgnY0gmlwhH8AAAGJc2VjcDI1NmsxoQOnBq2PcxFfkFACZvJz91cd-UKaTPtLv7zYJSJyAtq60YN0Y3CCIyiDdWRwgiMo'
+        return 'enr:-Iu4QIS99y_PyET83eyeAsS463grgYSm1tY6KaVljNjMMZhfFbqo2X0lXe8Lu19O_njq3-EZV9_dhiun5dJ4jOp5uVIBgmlkgnY0gmlwhH8AAAGJc2VjcDI1NmsxoQOnBq2PcxFfkFACZvJz91cd-UKaTPtLv7zYJSJyAtq60YN0Y3CCIyiDdWRwgiMo'
 
     # TODO: replace with docker cmd when I put in Travis
     def _run_args(self):
@@ -27,7 +27,9 @@ class LighthouseClient:
                 '--listen-address', f'{self.address}',
                 '--port', f'{self.port}',
                 '--p2p-priv-key', f'{self.privkey}',
-                'testnet', '-r',
+                'testnet',
+                '-r',
+                '--spec', 'minimal',
                 'file', 'ssz', f'{self.genesis_path}']
 
     # NOTE: if we want to expose client logs, we'd do so via stdout here
