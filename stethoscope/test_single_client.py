@@ -57,8 +57,8 @@ async def rumor(client):
         yield rumor
 
 
-# async def test_client_startup(client):
-    #assert client.is_running()
+async def test_client_startup(client):
+    assert client.is_running()
 
 # async def test_status_rpc(rumor):
     # async with rumor (decorator)
