@@ -1,4 +1,3 @@
-import shlex
 import subprocess
 
 
@@ -12,13 +11,10 @@ class DockerException(Exception):
         self.msg = msg
 
 
-class LighthouseClient:
-    """
-    Creates a lighthouse client seeded with a specific genesis file and with a predictable ENR.
-    """
+# TODO: extract out common abstract base class for clients (w/shared methods, etc.)
 
+class DockerLighthouseClient:
     def __init__(self, genesis_path):
-        # TODO: make these specifiable
         self.genesis_path = genesis_path
         self.address = '0.0.0.0'
         self.port = 9000
@@ -48,7 +44,7 @@ class LighthouseClient:
             raise DockerException("Can't move genesis file to container before container is created")
 
         out = subprocess.run(
-            ['docker', 'cp', 'ssz/genesis.ssz', f'{self.container_id}:/genesis.ssz'],
+            ['docker', 'cp', self.genesis_path, f'{self.container_id}:/genesis.ssz'],
             capture_output=True
         )
         if out.returncode != 0:
@@ -87,6 +83,30 @@ class LighthouseClient:
         return self.process.poll() is None
 
 
-def build_client(client_type, genesis_path):
-    # TODO: switch on client_type, maybe an enum
-    return LighthouseClient(genesis_path)
+class LighthouseClient:
+    def __init__(self, genesis_path):
+        # TODO: make these specifiable
+        self.genesis_path = genesis_path
+        self.address = '0.0.0.0'
+        self.port = 9000
+        self.privkey = '0xEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE'
+
+        self.process = None
+
+    # TODO: compute from our own parameters
+    def enr(self):
+        return 'enr:-Iu4QIS99y_PyET83eyeAsS463grgYSm1tY6KaVljNjMMZhfFbqo2X0lXe8Lu19O_njq3-EZV9_dhiun5dJ4jOp5uVIBgmlkgnY0gmlwhH8AAAGJc2VjcDI1NmsxoQOnBq2PcxFfkFACZvJz91cd-UKaTPtLv7zYJSJyAtq60YN0Y3CCIyiDdWRwgiMo'
+
+    def start(self):
+        self.process = subprocess.Popen(
+            ['lighthouse', 'bn', 'testnet', '--spec', 'minimal', '-f', 'file', 'ssz', self.genesis_path]
+        )
+
+    def stop(self):
+        if self.process is None or not self.is_running():
+            return
+
+        self.process.terminate()
+
+    def is_running(self):
+        return self.process.poll() is None

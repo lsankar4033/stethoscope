@@ -3,7 +3,7 @@ from pyrum import Rumor
 import os
 import pytest
 
-from stethoscope.clients import build_client
+from stethoscope.clients.clients import build_client
 from stethoscope.genesis_state import write_genesis_state
 
 GENESIS_PATH = 'ssz/genesis.ssz'
@@ -25,10 +25,11 @@ def genesis_path():
         os.remove(GENESIS_PATH)
 
 
-# NOTE: below, 'client' and 'rumor' may be renamed once we include multi-client tests as well as these
-# single-client ones
+def clients():
+    return ['lighthouse'] if ENV == 'development' else ['docker_lighthouse']
 
-@pytest.fixture(scope='session', params=['lighthouse'])
+
+@pytest.fixture(scope='session', params=clients())
 def client(request, genesis_path):
     client = build_client(request.param, genesis_path)
 
