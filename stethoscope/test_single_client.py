@@ -57,7 +57,10 @@ async def rumor(client):
         yield rumor
 
 
+# Tests that client started up properly
 async def test_client_startup(client):
+    import time
+    time.sleep(0.5)  # TODO: Do something better here
     assert client.is_running()
 
 # async def test_status_rpc(rumor):
