@@ -55,7 +55,9 @@ class DockerLighthouseClient:
             raise DockerException("Can't run container before it's created")
 
         self.process = subprocess.Popen(
-            ['docker', 'start', f'{self.container_id}']
+            ['docker', 'start', f'{self.container_id}'],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL
         )
 
     def logs(self):
@@ -99,7 +101,9 @@ class LighthouseClient:
 
     def start(self):
         self.process = subprocess.Popen(
-            ['lighthouse', 'bn', 'testnet', '--spec', 'minimal', '-f', 'file', 'ssz', self.genesis_path]
+            ['lighthouse', 'bn', 'testnet', '--spec', 'minimal', '-f', 'file', 'ssz', self.genesis_path],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL
         )
 
     def stop(self):
