@@ -71,7 +71,7 @@ async def test_status_rpc(single_client_rumor, genesis_path):
     state = load_genesis_state(genesis_path)
     req_status = Status(
         version=spec.GENESIS_FORK_VERSION,
-        finalized_root='0x0000000000000000000000000000000000000000000000000000000000000000'
+        finalized_root='0x0000000000000000000000000000000000000000000000000000000000000000',
         finalized_epoch=0,
         head_root='0x0000000000000000000000000000000000000000000000000000000000000000',
         head_epoch=0
