@@ -23,3 +23,9 @@ def write_genesis_state(path):
         state.serialize(w)
 
     return state
+
+
+def load_genesis_state(path):
+    state_size = os.stat(path).st_size
+    with open(path, 'rb') as r:
+        return spec.BeaconState.deserialize(r, state_size)

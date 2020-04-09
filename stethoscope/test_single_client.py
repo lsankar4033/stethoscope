@@ -4,7 +4,8 @@ import os
 import pytest
 
 from stethoscope.clients.clients import build_client
-from stethoscope.genesis_state import write_genesis_state
+from stethoscope.genesis_state import load_genesis_state, spec, write_genesis_state
+from stethoscope.reqresp import Status
 
 GENESIS_PATH = 'ssz/genesis.ssz'
 
@@ -44,8 +45,9 @@ def client(request, genesis_path):
 
 # NOTE: trio fixture
 @pytest.fixture
-async def rumor(client):
+async def single_client_rumor(client):
     print('starting rumor instance')
+    # TODO: install rumor on travis-ci
     async with Rumor(cmd='rumor') as rumor:
         await rumor.host.start()
         await rumor.host.listen(tcp=9001)
@@ -55,19 +57,35 @@ async def rumor(client):
         client_id = await rumor.peer.connect(client.enr()).peer_id()
         print(f'connected rumor to client with peer ID {client_id}')
 
-        yield rumor
+        yield (rumor, client_id)
 
 
 # Tests that client started up properly
-async def test_client_startup(client):
+def test_client_startup(client):
     import time
     time.sleep(0.5)  # TODO: Do something better here
     assert client.is_running()
 
-# async def test_status_rpc(rumor):
-    # async with rumor (decorator)
-    # connect rumor <-> client (helper fn?)
-    # try status message on rumor
-    # check response
-    #print(f'Rumor: {rumor}')
-    #assert True
+
+async def test_status_rpc(single_client_rumor, genesis_path):
+    state = load_genesis_state(genesis_path)
+    req_status = Status(
+        version=spec.GENESIS_FORK_VERSION,
+        finalized_root='0x0000000000000000000000000000000000000000000000000000000000000000'
+        finalized_epoch=0,
+        head_root='0x0000000000000000000000000000000000000000000000000000000000000000',
+        head_epoch=0
+    )
+    req = req_status.encode_bytes().hex()
+
+    rumor, client_id = single_client_rumor
+    resp = await rumor.rpc.status.req.raw(client_id, req, raw=True)
+    resp_status = Status.decode_bytes(bytes.fromhex(resp['chunk']['data']))
+
+    assert resp_status == Status(
+        version=spec.GENESIS_FORK_VERSION,
+        finalized_root='0x0000000000000000000000000000000000000000000000000000000000000000',
+        finalized_epoch=0,
+        head_root='0xef64a1b94652cd9070baa4f9c0e8b1ce624bdb071b77b51b1a54b8babb1a5cd2',
+        head_epoch=0
+    )
