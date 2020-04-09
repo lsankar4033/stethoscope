@@ -23,6 +23,7 @@ class DockerLighthouseClient:
         self.process = None
         self.container_id = None
 
+    # NOTE: assumes port 9000!
     # TODO: compute from our own parameters
     def enr(self):
         return 'enr:-Iu4QIS99y_PyET83eyeAsS463grgYSm1tY6KaVljNjMMZhfFbqo2X0lXe8Lu19O_njq3-EZV9_dhiun5dJ4jOp5uVIBgmlkgnY0gmlwhH8AAAGJc2VjcDI1NmsxoQOnBq2PcxFfkFACZvJz91cd-UKaTPtLv7zYJSJyAtq60YN0Y3CCIyiDdWRwgiMo'
@@ -30,8 +31,8 @@ class DockerLighthouseClient:
     def _create_container(self):
         # TODO: make sure this is what we expect
         out = subprocess.run(
-            ['docker', 'create', '-p', '9000:9000', 'sigp/lighthouse', 'lighthouse',
-                'bn', 'testnet', '--spec', 'minimal', '-f', 'file', 'ssz', 'genesis.ssz'],
+            ['docker', 'create', '-p', '9000:9000', 'sigp/lighthouse', 'lighthouse', 'bn', '--listen-address', self.address, '--port',
+                str(self.port), '--p2p-priv-key', self.privkey, 'testnet', '--spec', 'minimal', '-f', 'file', 'ssz', 'genesis.ssz'],
             capture_output=True
         )
         if out.returncode != 0:
@@ -55,7 +56,9 @@ class DockerLighthouseClient:
             raise DockerException("Can't run container before it's created")
 
         self.process = subprocess.Popen(
-            ['docker', 'start', f'{self.container_id}']
+            ['docker', 'start', f'{self.container_id}'],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL
         )
 
     def logs(self):
@@ -99,7 +102,10 @@ class LighthouseClient:
 
     def start(self):
         self.process = subprocess.Popen(
-            ['lighthouse', 'bn', 'testnet', '--spec', 'minimal', '-f', 'file', 'ssz', self.genesis_path]
+            ['lighthouse', 'bn', '--listen-address', self.address, '--port',
+                str(self.port), '--p2p-priv-key', self.privkey, 'testnet', '--spec', 'minimal', '-f', 'file', 'ssz', self.genesis_path],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL
         )
 
     def stop(self):
