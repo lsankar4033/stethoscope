@@ -1,5 +1,7 @@
 import subprocess
 
+from stethoscope.clients.client import Client
+
 
 class SubprocessException(Exception):
     def __init__(self, completed_process):
@@ -11,18 +13,9 @@ class DockerException(Exception):
         self.msg = msg
 
 
-class DockerLighthouseClient:
-    def __init__(self, genesis_path):
-        self.genesis_path = genesis_path
-        self.address = '0.0.0.0'
-        self.port = 9000
-        self.privkey = '0xEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE'
-
-        self.process = None
-
-    # TODO: compute from our own parameters
-    def enr(self):
-        return 'enr:-Iu4QIS99y_PyET83eyeAsS463grgYSm1tY6KaVljNjMMZhfFbqo2X0lXe8Lu19O_njq3-EZV9_dhiun5dJ4jOp5uVIBgmlkgnY0gmlwhH8AAAGJc2VjcDI1NmsxoQOnBq2PcxFfkFACZvJz91cd-UKaTPtLv7zYJSJyAtq60YN0Y3CCIyiDdWRwgiMo'
+class DockerLighthouseClient(Client):
+    def __init__(self, genesis_path, port):
+        Client.__init__(self, genesis_path, port)
 
     def _build_image(self):
         subprocess.run(
@@ -47,29 +40,10 @@ class DockerLighthouseClient:
         self._build_image()
         self._run_image()
 
-    def stop(self):
-        if self.process is None or not self.is_running():
-            return
 
-        self.process.terminate()
-
-    def is_running(self):
-        return self.process.poll() is None
-
-
-class LighthouseClient:
-    def __init__(self, genesis_path):
-        # TODO: make these specifiable
-        self.genesis_path = genesis_path
-        self.address = '0.0.0.0'
-        self.port = 9000
-        self.privkey = '0xEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE'
-
-        self.process = None
-
-    # TODO: compute from our own parameters
-    def enr(self):
-        return 'enr:-Iu4QIS99y_PyET83eyeAsS463grgYSm1tY6KaVljNjMMZhfFbqo2X0lXe8Lu19O_njq3-EZV9_dhiun5dJ4jOp5uVIBgmlkgnY0gmlwhH8AAAGJc2VjcDI1NmsxoQOnBq2PcxFfkFACZvJz91cd-UKaTPtLv7zYJSJyAtq60YN0Y3CCIyiDdWRwgiMo'
+class LighthouseClient(Client):
+    def __init__(self, genesis_path, port):
+        Client.__init__(self, genesis_path, port)
 
     def start(self):
         self.process = subprocess.Popen(
@@ -78,12 +52,3 @@ class LighthouseClient:
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL
         )
-
-    def stop(self):
-        if self.process is None or not self.is_running():
-            return
-
-        self.process.terminate()
-
-    def is_running(self):
-        return self.process.poll() is None

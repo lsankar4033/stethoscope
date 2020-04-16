@@ -3,7 +3,7 @@ from pyrum import Rumor
 import os
 import pytest
 
-from stethoscope.clients.clients import build_client
+from stethoscope.clients.main import build_client
 from stethoscope.genesis_state import load_genesis_state, spec, write_genesis_state
 from stethoscope.reqresp import Status
 
