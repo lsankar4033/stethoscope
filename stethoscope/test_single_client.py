@@ -1,3 +1,4 @@
+from eth2spec.phase0.spec import SignedBeaconBlock
 from pyrum import Rumor
 
 import os
@@ -5,7 +6,8 @@ import pytest
 
 from stethoscope.clients.clients import build_client
 from stethoscope.genesis_state import load_genesis_state, spec, write_genesis_state
-from stethoscope.reqresp import Status
+from stethoscope.reqresp import Status, BlocksByRangeReqV1, BlocksByRangeReqV2
+
 
 GENESIS_PATH = 'ssz/genesis.ssz'
 
@@ -67,18 +69,16 @@ def test_client_startup(client):
     assert client.is_running()
 
 
-async def test_status_rpc(single_client_rumor, genesis_path):
-    state = load_genesis_state(genesis_path)
-    req_status = Status(
+async def test_genesis_status_rpc(single_client_rumor):
+    rumor, client_id = single_client_rumor
+
+    req = Status(
         version=spec.GENESIS_FORK_VERSION,
         finalized_root='0x0000000000000000000000000000000000000000000000000000000000000000',
         finalized_epoch=0,
         head_root='0x0000000000000000000000000000000000000000000000000000000000000000',
         head_epoch=0
-    )
-    req = req_status.encode_bytes().hex()
-
-    rumor, client_id = single_client_rumor
+    ).encode_bytes().hex()
     resp = await rumor.rpc.status.req.raw(client_id, req, raw=True)
     resp_status = Status.decode_bytes(bytes.fromhex(resp['chunk']['data']))
 
@@ -89,3 +89,33 @@ async def test_status_rpc(single_client_rumor, genesis_path):
         head_root='0xef64a1b94652cd9070baa4f9c0e8b1ce624bdb071b77b51b1a54b8babb1a5cd2',
         head_epoch=0
     )
+
+
+# NOTE: may not be supported on clients yet
+async def test_genesis_blocks_by_range_v2(single_client_rumor):
+    rumor, client_id = single_client_rumor
+
+    req = BlocksByRangeReqV2(
+        start_slot=0,
+        count=1,
+        step=1
+    ).encode_bytes().hex()
+    resp = await rumor.rpc.blocks_by_range_v2.req.raw(client_id, req, raw=True)
+
+    first_block = SignedBeaconBlock.decode_bytes(bytes.fromhex(resp['chunk']['data']))
+    print(first_block)
+
+
+async def test_genesis_blocks_by_range_v1(single_client_rumor):
+    rumor, client_id = single_client_rumor
+
+    req = BlocksByRangeReqV1(
+        head_block_root='0x0000000000000000000000000000000000000000000000000000000000000000',
+        start_slot=0,
+        count=1,
+        step=1
+    ).encode_bytes().hex()
+    resp = await rumor.rpc.blocks_by_range.req.raw(client_id, req, raw=True)
+
+    first_block = SignedBeaconBlock.decode_bytes(bytes.fromhex(resp['chunk']['data']))
+    print(first_block)
