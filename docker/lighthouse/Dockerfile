@@ -13,6 +13,8 @@ ARG GENESIS_PATH=ssz/genesis.ssz
 
 COPY $GENESIS_PATH /genesis.ssz
 
+EXPOSE $PORT
+
 RUN ["/usr/local/bin/lcli", "--spec", "minimal", "new-testnet"]
 
 # TODO: why doesn't this work?
@@ -29,8 +31,8 @@ RUN ["/usr/local/bin/lcli", "--spec", "minimal", "new-testnet"]
 CMD ["/usr/local/bin/lighthouse", \
       "bn", \
       "--testnet-dir", "/root/.lightouse/testnet", \
-      "--listen-ADDRESS", "${ADDRESS}", \
-      "--PORT", "${PORT}", \
+      "--listen-address", "${ADDRESS}", \
+      "--port", "${PORT}", \
       "--p2p-priv-key", "${PRIVKEY}", \
       "testnet", \
       "--spec", "minimal", \

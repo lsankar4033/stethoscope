@@ -26,8 +26,13 @@ def genesis_path():
         os.remove(GENESIS_PATH)
 
 
+# TODO: remove 'lighthouse' when lighthouse docker is stable
 def clients():
-    return ['lighthouse'] if ENV == 'development' else ['docker_lighthouse']
+    c = ['lighthouse'] if ENV == 'development' else ['docker_lighthouse']
+    c = []  # NOTE: temp! while testing prysm
+    # return c + ['prysm']
+
+    return ['lighthouse']
 
 
 @pytest.fixture(scope='session', params=clients())
@@ -67,6 +72,7 @@ def test_client_startup(client):
     assert client.is_running()
 
 
+@pytest.mark.skip()
 async def test_status_rpc(single_client_rumor, genesis_path):
     state = load_genesis_state(genesis_path)
     req_status = Status(
