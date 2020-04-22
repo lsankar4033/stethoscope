@@ -4,7 +4,7 @@ from pyrum import Rumor
 import os
 import pytest
 
-from stethoscope.clients.clients import build_client
+from stethoscope.client import build_client
 from stethoscope.genesis import spec
 from stethoscope.reqresp import Status, BlocksByRangeReqV1, BlocksByRangeReqV2
 
