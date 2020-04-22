@@ -8,8 +8,8 @@ import eth2fastspec as spec
 import os
 
 
-def write_genesis_state(path):
-    # NOTE: taken from pyspec
+# reference code for generating the simple_minimal state
+def simple_minimal():
     eth1_block_hash = b'\x12' * 32
     eth1_timestamp = spec.MIN_GENESIS_TIME
 
@@ -17,14 +17,11 @@ def write_genesis_state(path):
         spec, spec.MIN_GENESIS_ACTIVE_VALIDATOR_COUNT, spec.MAX_EFFECTIVE_BALANCE, signed=True)
 
     state = initialize_beacon_state_from_eth1(eth1_block_hash, eth1_timestamp, deposits)
-
-    os.makedirs(os.path.dirname(path), exist_ok=True)
-    with open(path, 'wb') as w:
+    with open('ssz/simple_minimal.ssz', 'wb') as w:
         state.serialize(w)
 
-    return state
 
-
+# NOTE: just a helper
 def load_genesis_state(path):
     state_size = os.stat(path).st_size
     with open(path, 'rb') as r:
