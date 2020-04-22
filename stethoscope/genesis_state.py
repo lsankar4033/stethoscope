@@ -1,5 +1,5 @@
 from eth2spec.config.config_util import prepare_config
-prepare_config('./config', 'minimal')
+prepare_config('./config/spec', 'minimal')
 
 from eth2spec.phase0.spec import initialize_beacon_state_from_eth1
 from eth2spec.test.helpers.deposits import prepare_genesis_deposits
