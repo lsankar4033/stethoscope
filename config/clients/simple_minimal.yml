@@ -1,0 +1,7 @@
+# represents a single client seeded with ENR and adhering to minimal spec
+name: 'simple_minimal'
+tcp_port: 9000
+ip: '0.0.0.0'
+privkey: '0xEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE'
+spec_config: 'minimal'
+genesis: 'ssz/simple_minimal.ssz'
