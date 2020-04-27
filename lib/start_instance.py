@@ -1,4 +1,5 @@
 import eth_utils
+import subprocess
 
 from lib.enr import ENR
 
@@ -7,6 +8,7 @@ def format_ip(ip):
     return ".".join([str(n) for n in ip])
 
 
+# TODO: debug why this isn't quite working
 def start_instance(client, enr_str, genesis):
     if client != 'test':
         raise ValueError('only test clients supported at the moment')
