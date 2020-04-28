@@ -10,7 +10,7 @@ class BlocksByRangeReq(Container):
     step: uint64
 
 
-async def test_blocks_by_range(enr, genesis):
+async def test_blocks_by_range(enr, beacon_state):
     async with Rumor(cmd='rumor') as rumor:
         print('Testing blocks-by-range')
         await rumor.host.start()
@@ -28,7 +28,7 @@ async def test_blocks_by_range(enr, genesis):
                 block = SignedBeaconBlock.decode_bytes(byes.fromhex(chunk['data']))
                 blocks.append(block)
 
-        # TODO: make test here based on genesis
+        # TODO: make test here based on beacon_state
         assert blocks == []
 
         print("Successfully tested blocks-by-range")

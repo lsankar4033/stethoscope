@@ -16,7 +16,7 @@ class Status(Container):
     head_slot: uint64
 
 
-async def test_status(enr, genesis):
+async def test_status(enr, beacon_state):
     async with Rumor(cmd='rumor') as rumor:
         print('Testing status')
         await rumor.host.start()
@@ -27,7 +27,7 @@ async def test_status(enr, genesis):
         resp = await rumor.rpc.status.req.raw(peer_id, req, raw=True)
         resp_status = Status.decode_bytes(bytes.fromhex(resp['chunk']['data']))
 
-        # TODO: derive this from genesis
+        # TODO: derive this from beacon_state
         assert resp_status == Status(
             version=GENESIS_FORK_VERSION,
             head_root='0xef64a1b94652cd9070baa4f9c0e8b1ce624bdb071b77b51b1a54b8babb1a5cd2',

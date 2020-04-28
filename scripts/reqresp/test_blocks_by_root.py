@@ -6,5 +6,5 @@ class BlocksByRootReq(Container):
     ...
 
 
-async def test_blocks_by_root(enr, genesis):
+async def test_blocks_by_root(enr, beacon_state):
     ...
