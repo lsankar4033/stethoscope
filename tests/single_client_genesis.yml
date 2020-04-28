@@ -1,22 +1,37 @@
 instances:
   - client: all
-    enr_seed: 'enr:-Iu4QIS99y_PyET83eyeAsS463grgYSm1tY6KaVljNjMMZhfFbqo2X0lXe8Lu19O_njq3-EZV9_dhiun5dJ4jOp5uVIBgmlkgnY0gmlwhH8AAAGJc2VjcDI1NmsxoQOnBq2PcxFfkFACZvJz91cd-UKaTPtLv7zYJSJyAtq60YN0Y3CCIyiDdWRwgiMo'
-    beacon_state: ssz/simple_minimal
+    beacon_state: &beacon_state ssz/simple_minimal
+    enr:
+      enr: &enr 'enr:-Iu4QIS99y_PyET83eyeAsS463grgYSm1tY6KaVljNjMMZhfFbqo2X0lXe8Lu19O_njq3-EZV9_dhiun5dJ4jOp5uVIBgmlkgnY0gmlwhH8AAAGJc2VjcDI1NmsxoQOnBq2PcxFfkFACZvJz91cd-UKaTPtLv7zYJSJyAtq60YN0Y3CCIyiDdWRwgiMo'
+      private_key: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+      tcp: 9000
+      ip: 127.0.0.1
 
 
 test_cases:
   - name: reqresp status
     description: TODO
-    run: scripts/reqresp/test_status.py --enr='enr:-Iu4QIS99y_PyET83eyeAsS463grgYSm1tY6KaVljNjMMZhfFbqo2X0lXe8Lu19O_njq3-EZV9_dhiun5dJ4jOp5uVIBgmlkgnY0gmlwhH8AAAGJc2VjcDI1NmsxoQOnBq2PcxFfkFACZvJz91cd-UKaTPtLv7zYJSJyAtq60YN0Y3CCIyiDdWRwgiMo' --beacon_state=ssz/simple_minimal
+    script: scripts/reqresp/test_status.py
+    args:
+      enr: *enr
+      beacon_state: *beacon_state
 
   - name: reqresp blocks-by-root
     description: TODO
-    run: scripts/reqresp/blocks_by_root.py --enr='enr:-Iu4QIS99y_PyET83eyeAsS463grgYSm1tY6KaVljNjMMZhfFbqo2X0lXe8Lu19O_njq3-EZV9_dhiun5dJ4jOp5uVIBgmlkgnY0gmlwhH8AAAGJc2VjcDI1NmsxoQOnBq2PcxFfkFACZvJz91cd-UKaTPtLv7zYJSJyAtq60YN0Y3CCIyiDdWRwgiMo' --beacon_state=ssz/simple_minimal
+    script: scripts/reqresp/blocks_by_root.py
+    args:
+      enr: *enr
+      beacon_state: *beacon_state
 
   - name: reqresp blocks-by-range
     description: TODO
-    run: scripts/reqresp/blocks_by_range.py --enr='enr:-Iu4QIS99y_PyET83eyeAsS463grgYSm1tY6KaVljNjMMZhfFbqo2X0lXe8Lu19O_njq3-EZV9_dhiun5dJ4jOp5uVIBgmlkgnY0gmlwhH8AAAGJc2VjcDI1NmsxoQOnBq2PcxFfkFACZvJz91cd-UKaTPtLv7zYJSJyAtq60YN0Y3CCIyiDdWRwgiMo' --beacon_state=ssz/simple_minimal
+    script: scripts/reqresp/blocks_by_range.py
+    args:
+      enr: *enr
+      beacon_state: *beacon_state
 
   - name: gossip check-topics
     description: TODO
-    run: scripts/gossip/topic_membership --enr='enr:-Iu4QIS99y_PyET83eyeAsS463grgYSm1tY6KaVljNjMMZhfFbqo2X0lXe8Lu19O_njq3-EZV9_dhiun5dJ4jOp5uVIBgmlkgnY0gmlwhH8AAAGJc2VjcDI1NmsxoQOnBq2PcxFfkFACZvJz91cd-UKaTPtLv7zYJSJyAtq60YN0Y3CCIyiDdWRwgiMo'
+    script: scripts/gossip/topic_membership
+    args:
+      enr: *enr
