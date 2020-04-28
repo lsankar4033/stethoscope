@@ -19,5 +19,4 @@ test_cases:
 
   - name: gossip check-topics
     description: TODO
-    # TODO
-    #run: scripts/gossip/check_topics.py
+    run: scripts/gossip/topic_membership --enr='enr:-Iu4QIS99y_PyET83eyeAsS463grgYSm1tY6KaVljNjMMZhfFbqo2X0lXe8Lu19O_njq3-EZV9_dhiun5dJ4jOp5uVIBgmlkgnY0gmlwhH8AAAGJc2VjcDI1NmsxoQOnBq2PcxFfkFACZvJz91cd-UKaTPtLv7zYJSJyAtq60YN0Y3CCIyiDdWRwgiMo'
