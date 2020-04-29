@@ -1,13 +1,61 @@
 # stethoscope
-See [here](https://hackmd.io/t7aT3kQMS2S6me4Zo1CT3A?view) for the plan.
+Stethoscope is a suite of networking tests for eth2 clients that are designed to be readable and runnable by anyone.
 
-New structure:
-- clients/ where client startup scripts live
-- tests/ where tests are defined (yml files)
-- scripts/ where scripts that tests run (and probably share) are defined
-  - maybe also where genesis writing files live?
-- ssz/ where genesis files live (referred by tests)
+## Overview
+Network testing is a 'last mile' problem  that needs to be solved before Eth2 gets to Phase 0 mainnet. There are already some [great](https://github.com/protolambda/rumor) [tools](https://github.com/prrkl/docs/blob/master/project-overview.md) that are client agnostic and allow manual network debugging/testing.
 
-In this model, each file in tests/ corresponds to a *single test setup*. For example, it's assumed that the
-clients in 'instances' will only be started once. 'all' can be used here for something that should be run
-against every client.
+Stethoscope is complementary to these tools in the same way that the eth2spec is complementary to implementation efforts. It'll serve as a living repository of test cases along with a way for anyone to run them and verify that things are working as expected.
+
+Tests are grouped by the instance group required to set them up. For an example, see the [single\_client\_genesis](tests/single_client_genesis.yml) group. See [here](#test-config-format) for more on the format of these files.
+
+## Usage
+
+### Prereqs
+- python3
+- pip
+
+
+### Run locally
+Clone the repo and install requirements:
+
+```bash
+$ https://github.com/lsankar4033/stethoscope.git && cd stethoscope
+...
+$ pip install -r requirements.txt
+
+```
+Then, run a single test suite (in this case [single\_client\_genesis](tests/single_client_genesis.yml):
+
+```bash
+$ python run_test.py single_client_genesis
+```
+
+Or run all tests:
+
+```bash
+$ python run_tests.py
+```
+
+Note that by default the test will run with my 'test' eth2 client, which is an old lighthouse binary. As scripts to run the various clients are added to [clients/](clients/), the test suites will be runnable against all of them.
+
+## Testing plan and progress
+### single-client
+Single client tests correspond to any tests 
+
+### multiple-client of one type
+TODO
+
+### multi-client of multiple types
+TODO
+
+## Contributions
+Contributions extremely welcome! Especially in the realm of:
+
+1. new test cases
+2. scripts to run each client
+
+For 1, please file an issue describing any suggestions and for 2, please submit PRs to this repo!
+
+
+## Test config format
+TODO
