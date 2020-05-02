@@ -37,11 +37,6 @@ async def test_status(enr, beacon_state_path):
         )
         print('Successfully tested status')
 
-
-async def test_fn(foo):
-    print(f'hello! {foo}')
-
-
 if __name__ == '__main__':
     import argparse
 
