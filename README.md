@@ -27,7 +27,7 @@ $ pip install -r requirements.txt
 Then, run a single test suite (in this case [single\_client\_genesis](tests/single_client_genesis.yml):
 
 ```bash
-$ python run_test.py single_client_genesis
+$ python run_test.py tests/single_client_genesis.yml
 ```
 
 Or run all tests:
