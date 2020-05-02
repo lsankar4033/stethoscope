@@ -1,5 +1,5 @@
 instances:
-  - client: test
+  - client: all
     beacon_state_path: &beacon_state_path ssz/single_client_genesis.ssz
     enr:
       enr: &enr 'enr:-Iu4QIS99y_PyET83eyeAsS463grgYSm1tY6KaVljNjMMZhfFbqo2X0lXe8Lu19O_njq3-EZV9_dhiun5dJ4jOp5uVIBgmlkgnY0gmlwhH8AAAGJc2VjcDI1NmsxoQOnBq2PcxFfkFACZvJz91cd-UKaTPtLv7zYJSJyAtq60YN0Y3CCIyiDdWRwgiMo'
