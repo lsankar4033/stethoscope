@@ -1,0 +1,37 @@
+instances:
+  - client: test
+    beacon_state_path: &beacon_state_path ssz/single_client_genesis.ssz
+    enr:
+      enr: &enr 'enr:-Iu4QIS99y_PyET83eyeAsS463grgYSm1tY6KaVljNjMMZhfFbqo2X0lXe8Lu19O_njq3-EZV9_dhiun5dJ4jOp5uVIBgmlkgnY0gmlwhH8AAAGJc2VjcDI1NmsxoQOnBq2PcxFfkFACZvJz91cd-UKaTPtLv7zYJSJyAtq60YN0Y3CCIyiDdWRwgiMo'
+      private_key: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+      tcp: 9000
+      ip: 127.0.0.1
+
+
+test_cases:
+  - name: reqresp status
+    description: TODO
+    script: scripts/reqresp/status.py
+    args:
+      enr: *enr
+      beacon_state_path: *beacon_state_path
+
+  - name: reqresp blocks-by-root
+    description: TODO
+    script: scripts/reqresp/blocks_by_root.py
+    args:
+      enr: *enr
+      beacon_state_path: *beacon_state_path
+
+  - name: reqresp blocks-by-range
+    description: TODO
+    script: scripts/reqresp/blocks_by_range.py
+    args:
+      enr: *enr
+      beacon_state_path: *beacon_state_path
+
+  - name: gossip check-topics
+    description: TODO
+    script: scripts/gossip/topic_membership.py
+    args:
+      enr: *enr
