@@ -3,6 +3,8 @@ from eth2spec.utils.ssz.ssz_typing import (
 )
 from pyrum import Rumor
 
+import trio
+
 
 # minimal config
 GENESIS_FORK_VERSION = '0x00000001'
@@ -16,11 +18,12 @@ class Status(Container):
     head_slot: uint64
 
 
-async def test_status(enr, beacon_state):
+async def test_status(enr, beacon_state_path):
     async with Rumor(cmd='rumor') as rumor:
         print('Testing status')
         await rumor.host.start()
 
+        # NOTE: will fail if ENR isn't available
         peer_id = await rumor.peer.connect(enr).peer_id()
 
         req = Status(head_slot=0).encode_bytes().hex()
@@ -35,9 +38,18 @@ async def test_status(enr, beacon_state):
         print('Successfully tested status')
 
 
+async def test_fn(foo):
+    print(f'hello! {foo}')
+
+
 if __name__ == '__main__':
     import argparse
 
-    parser = argparse.ArgumentParser(description='Run a single stethoscope test')
-    parser.add_argument('test')
-    # TODO: finish making this call-able from yaml
+    parser = argparse.ArgumentParser()
+    req_grp = parser.add_argument_group(title='required')
+    req_grp.add_argument('--enr', required=True)
+    req_grp.add_argument('--beacon_state_path', required=True)
+
+    args = parser.parse_args()
+
+    trio.run(test_status, args.enr, args.beacon_state_path)
