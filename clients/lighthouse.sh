@@ -2,14 +2,18 @@
 
 docker pull sigp/lighthouse:latest
 
-# TODO: expose port during creation
-# TODO: specify port, address, privkey from args
-# TODO: use args for single_client_genesis
-docker create --name lighthouse sigp/lighthouse:latest bin/bash -c \
+# TODO: expose ports during creation
+# TODO: use args for single_client_genesis, port(s), address, privkey
+docker create --name lighthouse -p 9000:9000 -p 9001:9001 sigp/lighthouse:latest bin/bash -c \
   "lcli --spec minimal new-testnet --testnet-dir /testnet --deposit-contract-address 0000000000000000000000000000000000000000 && \
   cp /genesis.ssz /testnet/genesis.ssz && \
-  lighthouse bn --testnet-dir /testnet --spec minimal --dummy-eth1 --http --enr-match"
+  lighthouse bn --testnet-dir /testnet --spec minimal --dummy-eth1 \
+    --enr-tcp-port 9000 \
+    --enr-udp-port 9001 \
+    --enr-address 127.0.0.1 \
+    --p2p-priv-key 0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
 
 docker cp ssz/single_client_genesis.ssz lighthouse:/genesis.ssz
 docker start lighthouse
-# TODO: docker start container with port, address, args
+
+# TODO: return the container ID for shutdown by runner process?
