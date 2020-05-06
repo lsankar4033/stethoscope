@@ -11,6 +11,7 @@ def run_test(test):
         test_config = yaml.load(f, Loader=yaml.Loader)
 
     # TODO: if client is 'all' for any instances, do this for *all* clients
+    print("Only starting lighthouse instances because that's the only client startup script we have right now")
     instance_configs = start_instances(test_config)
 
     try:
