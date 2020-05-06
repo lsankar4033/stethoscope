@@ -13,28 +13,28 @@ instances:
 
 test_cases:
   - name: reqresp status
-    description: TODO
+    description: Checks that status endpoint is responsive to a valid request and returns properly
     script: scripts/reqresp/status.py
     args:
       enr: *enr
       beacon_state_path: *beacon_state_path
 
   - name: reqresp blocks-by-root
-    description: TODO
+    description: Checks that blocks_by_root endpoint is responsive to a valid request and returns properly
     script: scripts/reqresp/blocks_by_root.py
     args:
       enr: *enr
       beacon_state_path: *beacon_state_path
 
   - name: reqresp blocks-by-range
-    description: TODO
+    description: Checks that blocks_by_range endpoint is responsive to a valid request and returns properly
     script: scripts/reqresp/blocks_by_range.py
     args:
       enr: *enr
       beacon_state_path: *beacon_state_path
 
   - name: gossip check-topics
-    description: TODO
+    description: Checks that the node is subscribed to all expected gossipsub topics
     script: scripts/gossip/topic_membership.py
     args:
       enr: *enr
