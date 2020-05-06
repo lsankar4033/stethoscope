@@ -10,7 +10,7 @@ def run_test(test):
     with open(test, 'r') as f:
         test_config = yaml.load(f, Loader=yaml.Loader)
 
-    # TODO: generalize this to stop scripts returned by start script or smthing
+    # TODO: if client is 'all' for any instances, do this for *all* clients
     instance_configs = start_instances(test_config)
 
     try:
