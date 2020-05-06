@@ -11,13 +11,13 @@ def run_test(test):
         test_config = yaml.load(f, Loader=yaml.Loader)
 
     # TODO: generalize this to stop scripts returned by start script or smthing
-    instance_processes = start_instances(test_config)
+    instance_configs = start_instances(test_config)
 
     try:
         run_test_config(test_config)
 
     finally:
-        stop_instances(instance_processes)
+        stop_instances(instance_configs)
 
 
 if __name__ == '__main__':

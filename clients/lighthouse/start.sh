@@ -2,7 +2,7 @@
 
 docker pull sigp/lighthouse:latest
 
-# TODO: expose ports during creation
+# TODO: use a name that's passed in! To allow multiple lighthouse clients
 # TODO: use args for single_client_genesis, port(s), address, privkey
 docker create --name lighthouse -p 9000:9000 -p 9001:9001 sigp/lighthouse:latest bin/bash -c \
   "lcli --spec minimal new-testnet --testnet-dir /testnet --deposit-contract-address 0000000000000000000000000000000000000000 && \
@@ -15,5 +15,3 @@ docker create --name lighthouse -p 9000:9000 -p 9001:9001 sigp/lighthouse:latest
 
 docker cp ssz/single_client_genesis.ssz lighthouse:/genesis.ssz
 docker start lighthouse
-
-# TODO: return the container ID for shutdown by runner process?
