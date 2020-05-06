@@ -1,5 +1,5 @@
 # stethoscope
-Stethoscope is a suite of networking tests for eth2 clients that are designed to be readable and runnable by anyone.
+Stethoscope is a suite of networking tests for eth2 beacon-chain clients that are designed to be readable and runnable by anyone.
 
 ## Overview
 Network testing is a 'last mile' problem  that needs to be solved before Eth2 gets to Phase 0 mainnet. There are already some [great](https://github.com/protolambda/rumor) [tools](https://github.com/prrkl/docs/blob/master/project-overview.md) that are client agnostic and allow manual network debugging/testing.
@@ -40,7 +40,7 @@ Note that by default the test will run with my 'test' eth2 client, which is an o
 
 ## Testing plan and progress
 There are two classes of tests that stethoscope is intended to cover:
-	
+
 1. sanity checks
 2. edge cases discovered by other testing
 

@@ -4,8 +4,11 @@ from typing import NamedTuple
 class ENR(NamedTuple):
     private_key: str
     tcp: int
+    udp: int
     ip: int
     enr: str
+    attnets: str
+    eth2: str
 
 
 class InstanceConfig(NamedTuple):

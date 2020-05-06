@@ -27,7 +27,7 @@ async def test_blocks_by_range(enr, beacon_state):
         blocks = []
         async for chunk in rumor.rpc.blocks_by_range.req.raw(peer_id, req, raw=True).chunk():
             if chunk['result_code'] == 0:
-                block = SignedBeaconBlock.decode_bytes(byes.fromhex(chunk['data']))
+                block = SignedBeaconBlock.decode_bytes(bytes.fromhex(chunk['data']))
                 blocks.append(block)
 
         # TODO: make test here based on beacon_state
