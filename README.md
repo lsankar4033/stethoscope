@@ -13,7 +13,7 @@ Tests are grouped by the instance group required to set them up. For an example,
 ### Prereqs
 - python3
 - pip
-
+- docker (for client startup scripts)
 
 ### Run locally
 Clone the repo and install requirements:
