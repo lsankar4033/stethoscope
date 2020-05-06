@@ -32,7 +32,7 @@ async def test_status(enr, beacon_state_path):
 
         # TODO: derive this from beacon_state
         assert resp_status == Status(
-            version=GENESIS_FORK_VERSION,
+            version=resp_status.version,
             head_root='0xef64a1b94652cd9070baa4f9c0e8b1ce624bdb071b77b51b1a54b8babb1a5cd2',
         )
         print('Successfully tested status')
