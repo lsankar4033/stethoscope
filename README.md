@@ -30,11 +30,11 @@ Then, run a single test suite (in this case [single\_client\_genesis](tests/sing
 $ python run_test.py tests/single_client_genesis.yml
 ```
 
-Or run all tests:
+<!--Or run all tests:-->
 
-```bash
-$ python run_tests.py
-```
+<!--```bash-->
+<!--$ python run_tests.py-->
+<!--```-->
 
 Note that by default the test will run with my 'test' eth2 client, which is an old lighthouse binary. As scripts to run the various clients are added to [clients/](clients/), the test suites will be runnable against all of them.
 
