@@ -62,6 +62,12 @@ _TODO_: add remaining TODO tests (invalid messages, more gossip, discv5 tests)
 
 TODO
 
+## Client start/stop scripts
+
+Each client needs bash scripts for starting and stopping, as seen for lighthouse [here](https://github.com/lsankar4033/stethoscope/tree/master/clients/lighthouse). 
+
+These scripts need to take [initialization parameters](https://github.com/lsankar4033/stethoscope/blob/master/tests/single_client_genesis.yml#L3-L11) as input. (TODO: elaborate more on this!).
+
 ## Contributions
 Contributions extremely welcome! Especially in the realm of:
 
