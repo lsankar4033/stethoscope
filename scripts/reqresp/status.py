@@ -16,7 +16,7 @@ class Status(Container):
 
 async def test_status(enr, beacon_state_path):
     async with Rumor(cmd='rumor') as rumor:
-        print('Testing status')
+        print('testing status')
         await rumor.host.start()
 
         # NOTE: will fail if ENR isn't available
@@ -31,7 +31,7 @@ async def test_status(enr, beacon_state_path):
             version=resp_status.version,
             head_root='0xef64a1b94652cd9070baa4f9c0e8b1ce624bdb071b77b51b1a54b8babb1a5cd2',
         )
-        print('Successfully tested status')
+        print('successfully tested status')
 
 if __name__ == '__main__':
     import argparse

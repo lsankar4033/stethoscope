@@ -14,7 +14,7 @@ class BlocksByRangeReq(Container):
 
 async def test_blocks_by_range(enr, beacon_state):
     async with Rumor(cmd='rumor') as rumor:
-        print('Testing blocks-by-range')
+        print('testing blocks-by-range')
         await rumor.host.start()
 
         peer_id = await rumor.peer.connect(enr).peer_id()
@@ -33,7 +33,7 @@ async def test_blocks_by_range(enr, beacon_state):
         # TODO: make test here based on beacon_state
         assert blocks == []
 
-        print("Successfully tested blocks-by-range")
+        print("successfully tested blocks-by-range")
 
 if __name__ == '__main__':
     import argparse
