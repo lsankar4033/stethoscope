@@ -1,4 +1,5 @@
 import argparse
+import os
 import yaml
 
 from lib.fixtures import extract_fixtures, setup_fixture, teardown_fixture
@@ -21,17 +22,28 @@ def run_test(test):
             continue
 
         try:
-            # TODO: make this better
             run_test_suite(full_config)
 
         finally:
             teardown_fixture(fixture)
 
 
+TESTS_DIR = 'tests'
+
+
+def run_all_tests():
+    for test_file in os.listdir(TESTS_DIR):
+        run_test(f'{TESTS_DIR}/{test_file}')
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Run a single stethoscope test')
-    parser.add_argument('test')
+    parser.add_argument('-t', '--test', help='run a specific test by name')
 
     args = parser.parse_args()
 
-    run_test(args.test)
+    if args.test is None:
+        run_all_tests()
+
+    else:
+        run_test(f'tests/{args.test}.yml')
