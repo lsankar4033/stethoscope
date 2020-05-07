@@ -6,10 +6,6 @@ from pyrum import Rumor
 import trio
 
 
-# minimal config
-GENESIS_FORK_VERSION = '0x00000001'
-
-
 class Status(Container):
     version: Bytes4
     finalized_root: Bytes32

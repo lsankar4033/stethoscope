@@ -1,5 +1,7 @@
 from pyrum import Rumor
 
+import trio
+
 EXPECTED_TOPICS = ["/eth2/beacon_block/ssz", "/eth2/beacon_attestation/ssz", "/eth2/voluntary_exit/ssz",
                    "/eth2/proposer_slashing/ssz", "/eth2/attester_slashing/ssz"]
 
@@ -21,3 +23,14 @@ async def check_topics(enr):
             assert peers == [peer_id]
 
         print('done')
+
+if __name__ == '__main__':
+    import argparse
+
+    parser = argparse.ArgumentParser()
+    req_grp = parser.add_argument_group(title='required')
+    req_grp.add_argument('--enr', required=True)
+
+    args = parser.parse_args()
+
+    trio.run(check_topics, args.enr)

@@ -16,8 +16,8 @@ def run_script(script, args):
         print(output.stdout)
 
 
-def run_test_config(test_config):
-    tests = test_config['test_cases']
+def run_test_suite(test_config):
+    tests = test_config['test_suite']
 
     for test in tests:
         script = test['script']
