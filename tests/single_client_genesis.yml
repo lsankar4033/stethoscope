@@ -11,7 +11,7 @@ instances:
       eth2: '0x4632448900000001ffffffffffffffff'
 
 
-test_cases:
+test_suite:
   - name: reqresp status
     description: Checks that status endpoint is responsive to a valid request and returns properly
     script: scripts/reqresp/status.py

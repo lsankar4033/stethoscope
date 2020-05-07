@@ -1,4 +1,4 @@
-from typing import NamedTuple
+from typing import List, NamedTuple
 
 
 class ENR(NamedTuple):
@@ -11,6 +11,7 @@ class ENR(NamedTuple):
     eth2: str
 
 
+# NOTE: could turn into 'Instance' to represent a thing that can be on and turned off
 class InstanceConfig(NamedTuple):
     client: str
     beacon_state_path: str
@@ -19,3 +20,7 @@ class InstanceConfig(NamedTuple):
     @classmethod
     def from_dict(cls, d):
         return cls(d['client'], d['beacon_state_path'], ENR(**d['enr']))
+
+
+class Fixture(NamedTuple):
+    instances: List[InstanceConfig]

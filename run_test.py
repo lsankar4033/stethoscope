@@ -1,24 +1,31 @@
 import argparse
 import yaml
 
-from lib.client_instances import start_instances, stop_instances
-from lib.test_runner import run_test_config
+from lib.fixtures import extract_fixtures, setup_fixture, teardown_fixture
+from lib.runner import run_test_suite
 from lib.types import ENR, InstanceConfig
 
 
 def run_test(test):
     with open(test, 'r') as f:
-        test_config = yaml.load(f, Loader=yaml.Loader)
+        full_config = yaml.load(f, Loader=yaml.Loader)
 
-    # TODO: if client is 'all' for any instances, do this for *all* clients
-    print("Only starting lighthouse instances because that's the only client startup script we have right now")
-    instance_configs = start_instances(test_config)
+    fixtures = extract_fixtures(full_config)
 
-    try:
-        run_test_config(test_config)
+    for fixture in fixtures:
+        try:
+            # TODO: return teardown instructions here
+            setup_fixture(fixture)
+        except ValueError as e:
+            print(f'skipping fixture: {e}')
+            continue
 
-    finally:
-        stop_instances(instance_configs)
+        try:
+            # TODO: make this better
+            run_test_suite(full_config)
+
+        finally:
+            teardown_fixture(fixture)
 
 
 if __name__ == '__main__':
