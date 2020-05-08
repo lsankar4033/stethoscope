@@ -3,7 +3,7 @@ from eth2spec.phase0.spec import Root
 
 from typing import List
 
-from ..utils import connect_rumor
+from ..utils import connect_rumor, parse_args
 
 
 class Request(Container):
@@ -26,13 +26,5 @@ async def test_blocks_by_root(enr, beacon_state):
 
 
 if __name__ == '__main__':
-    import argparse
-
-    parser = argparse.ArgumentParser()
-    req_grp = parser.add_argument_group(title='required')
-    req_grp.add_argument('--enr', required=True)
-    req_grp.add_argument('--beacon_state_path', required=True)
-
-    args = parser.parse_args()
-
+    args = parse_args('--enr', '--beacon_state_path')
     trio.run(test_blocks_by_root, args.enr, args.beacon_state_path)

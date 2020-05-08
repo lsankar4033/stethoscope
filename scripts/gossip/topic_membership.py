@@ -29,12 +29,5 @@ async def check_topics(enr):
             nursery.cancel_scope.cancel()
 
 if __name__ == '__main__':
-    import argparse
-
-    parser = argparse.ArgumentParser()
-    req_grp = parser.add_argument_group(title='required')
-    req_grp.add_argument('--enr', required=True)
-
-    args = parser.parse_args()
-
+    args = parse_args('--enr')
     trio.run(check_topics, args.enr)

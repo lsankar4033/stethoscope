@@ -34,12 +34,5 @@ async def test_status(enr, beacon_state_path):
             nursery.cancel_scope.cancel()
 
 if __name__ == '__main__':
-    #import argparse
-
-    #parser = argparse.ArgumentParser()
-    #req_grp = parser.add_argument_group(title='required')
-    #req_grp.add_argument('--enr', required=True)
-    #req_grp.add_argument('--beacon_state_path', required=True)
-
     args = parse_args('--enr', '--beacon_state_path')
     trio.run(test_status, args.enr, args.beacon_state_path)
