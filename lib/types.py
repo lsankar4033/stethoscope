@@ -23,4 +23,5 @@ class InstanceConfig(NamedTuple):
 
 
 class Fixture(NamedTuple):
+    name: str
     instances: List[InstanceConfig]

@@ -33,13 +33,13 @@ def extract_fixtures(config) -> List[Fixture]:
             # convert 'all' instances to $client
             def convert(ic): return ic._replace(client=client) if ic.client == 'all' else ic
 
-            fixture = Fixture([convert(InstanceConfig.from_dict(i)) for i in config['instances']])
+            fixture = Fixture(client, [convert(InstanceConfig.from_dict(i)) for i in config['instances']])
             fixtures.append(fixture)
 
         return fixtures
 
     else:
-        fixture = Fixture([InstanceConfig.from_dict(i) for i in config['instances']])
+        fixture = Fixture(None, [InstanceConfig.from_dict(i) for i in config['instances']])
         return [fixture]
 
 
