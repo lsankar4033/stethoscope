@@ -22,6 +22,7 @@ def run_suite(suite):
         cw = cw._replace(fixture=fixture.name)
         try:
             # TODO: return teardown instructions here
+            cw.info('attempting setup_fixture')
             setup_fixture(fixture)
         except ValueError as e:
             cw.info(f'skipping fixture: {e}')
@@ -31,8 +32,8 @@ def run_suite(suite):
             run_test_suite(full_config, cw)
 
         finally:
+            cw.info('attempting teardown_fixture')
             teardown_fixture(fixture)
-            print('')
 
 
 def run_all_suites():
