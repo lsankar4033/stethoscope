@@ -1,4 +1,6 @@
 from pyrum import Rumor
+from pyrum import SubprocessConn, Rumor
+from ..utils import parse_args, connect_rumor
 
 import trio
 
@@ -7,22 +9,24 @@ EXPECTED_TOPICS = ["/eth2/beacon_block/ssz", "/eth2/beacon_attestation/ssz", "/e
 
 
 async def check_topics(enr):
-    async with Rumor(cmd='rumor') as rumor:
-        print('testing topics')
-        await rumor.host.start()
-        await rumor.gossip.start()
+    async with SubprocessConn(cmd='rumor bare') as conn:
+        async with trio.open_nursery() as nursery:
+            rumor = Rumor(conn, nursery)
+            peer_id = await connect_rumor(rumor, enr)
 
-        peer_id = await rumor.peer.connect(enr).peer_id()
+            await rumor.gossip.start()
 
-        for topic in EXPECTED_TOPICS:
-            await rumor.gossip.join(topic)
+            peer_id = await rumor.peer.connect(enr).peer_id()
 
-            resp = await rumor.gossip.list_peers(topic)
-            peers = resp['peers']
+            for topic in EXPECTED_TOPICS:
+                await rumor.gossip.join(topic)
 
-            assert peers == [peer_id]
+                resp = await rumor.gossip.list_peers(topic)
+                peers = resp['peers']
 
-        print('done')
+                assert peers == [peer_id]
+
+            nursery.cancel_scope.cancel()
 
 if __name__ == '__main__':
     import argparse
