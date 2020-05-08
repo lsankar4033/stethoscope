@@ -13,7 +13,8 @@ Tests are grouped by the instance group required to set them up. For an example,
 ### Prereqs
 - python3
 - pip
-- docker (for client startup scripts)
+- rumor
+- docker
 
 ### Run locally
 Clone the repo and install requirements:
@@ -64,7 +65,7 @@ TODO
 
 ## Client start/stop scripts
 
-Each client needs bash scripts for starting and stopping, as seen for lighthouse [here](https://github.com/lsankar4033/stethoscope/tree/master/clients/lighthouse). 
+Each client needs bash scripts for starting and stopping, as seen for lighthouse [here](https://github.com/lsankar4033/stethoscope/tree/master/clients/lighthouse).
 
 These scripts need to take [initialization parameters](https://github.com/lsankar4033/stethoscope/blob/master/tests/single_client_genesis.yml#L3-L11) as input. (TODO: elaborate more on this!).
 
