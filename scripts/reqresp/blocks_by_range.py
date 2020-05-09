@@ -1,7 +1,7 @@
 from eth2spec.utils.ssz.ssz_typing import Container, uint64
-from eth2spec.phase0.spec import SignedBeaconBlock, Slot
+from eth2spec.phase0.spec import BeaconBlock, SignedBeaconBlock, Slot
 
-from pyrum import Rumor
+from pyrum import SubprocessConn, Rumor
 
 from ..utils import connect_rumor, parse_args
 
@@ -31,8 +31,10 @@ async def test_blocks_by_range(enr, beacon_state):
                     block = SignedBeaconBlock.decode_bytes(bytes.fromhex(chunk['data']))
                     blocks.append(block)
 
-            # TODO: make test here based on beacon_state
-            assert blocks == []
+            assert blocks == [SignedBeaconBlock(
+                message=BeaconBlock(
+                    state_root='0x363bcbffb8bcbc8db51bda09cb68a5a3cc7cb2c1b79f8301a3157e37e24c687d')
+            )], f'actual blocks: {blocks}'
 
             nursery.cancel_scope.cancel()
 
