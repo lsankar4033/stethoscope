@@ -3,8 +3,12 @@ import subprocess
 from lib.console import ConsoleWriter
 
 
+def script_to_module(script):
+    return script.replace('/', '.')[0:-3]
+
+
 def run_script(script, args, cw):
-    script_list = ['python', script]
+    script_list = ['python3', '-m', script_to_module(script)]
     arg_list = [item for sublist in [['--' + k, v] for k, v in args.items()] for item in sublist]
 
     output = subprocess.run(

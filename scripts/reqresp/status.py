@@ -1,12 +1,13 @@
 from eth2spec.utils.ssz.ssz_typing import (
     Bytes4, Bytes32, Container, uint64
 )
-from pyrum import Rumor
+from pyrum import SubprocessConn, Rumor
+from ..utils import parse_args, connect_rumor
 
 import trio
 
 
-class Status(Container):
+class Request(Container):
     version: Bytes4
     finalized_root: Bytes32
     finalized_epoch: uint64
@@ -15,32 +16,22 @@ class Status(Container):
 
 
 async def test_status(enr, beacon_state_path):
-    async with Rumor(cmd='rumor') as rumor:
-        print('testing status')
-        await rumor.host.start()
+    async with SubprocessConn(cmd='rumor bare') as conn:
+        async with trio.open_nursery() as nursery:
+            rumor = Rumor(conn, nursery)
+            peer_id = await connect_rumor(rumor, enr)
 
-        # NOTE: will fail if ENR isn't available
-        peer_id = await rumor.peer.connect(enr).peer_id()
+            req = Request(head_slot=0).encode_bytes().hex()
+            resp = await rumor.rpc.status.req.raw(peer_id, req, raw=True)
+            resp_status = Request.decode_bytes(bytes.fromhex(resp['chunk']['data']))
 
-        req = Status(head_slot=0).encode_bytes().hex()
-        resp = await rumor.rpc.status.req.raw(peer_id, req, raw=True)
-        resp_status = Status.decode_bytes(bytes.fromhex(resp['chunk']['data']))
+            assert resp_status == Request(
+                version=resp_status.version,
+                head_root='0xef64a1b94652cd9070baa4f9c0e8b1ce624bdb071b77b51b1a54b8babb1a5cd2',
+            ), f'actual status: {resp_status}'
 
-        # TODO: derive this from beacon_state
-        assert resp_status == Status(
-            version=resp_status.version,
-            head_root='0xef64a1b94652cd9070baa4f9c0e8b1ce624bdb071b77b51b1a54b8babb1a5cd2',
-        )
-        print('successfully tested status')
+            nursery.cancel_scope.cancel()
 
 if __name__ == '__main__':
-    import argparse
-
-    parser = argparse.ArgumentParser()
-    req_grp = parser.add_argument_group(title='required')
-    req_grp.add_argument('--enr', required=True)
-    req_grp.add_argument('--beacon_state_path', required=True)
-
-    args = parser.parse_args()
-
+    args = parse_args('--enr', '--beacon_state_path')
     trio.run(test_status, args.enr, args.beacon_state_path)

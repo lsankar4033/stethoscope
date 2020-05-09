@@ -23,6 +23,7 @@ def run_suite(suite):
         try:
             # TODO: return teardown instructions here
             setup_fixture(fixture)
+            cw.info('setup fixture')
         except ValueError as e:
             cw.info(f'skipping fixture: {e}')
             continue
@@ -32,7 +33,6 @@ def run_suite(suite):
 
         finally:
             teardown_fixture(fixture)
-            print('')
 
 
 def run_all_suites():
