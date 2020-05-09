@@ -24,7 +24,7 @@ async def check_topics(enr):
                 resp = await rumor.gossip.list_peers(topic)
                 peers = resp['peers']
 
-                assert peers == [peer_id]
+                assert peers == [peer_id], f'actual peers for topic {topic}: {peers}'
 
             nursery.cancel_scope.cancel()
 
