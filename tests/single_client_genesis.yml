@@ -34,8 +34,14 @@ test_suite:
       beacon_state_path: *beacon_state_path
 
   - name: reqresp ping
-    description: Checks that pin  endpoint is responsive
+    description: Checks that ping endpoint is responsive
     script: scripts/reqresp/ping.py
+    args:
+      enr: *enr
+
+  - name: reqresp metadata
+    description: Checks that metadata endpoint is responsive
+    script: scripts/reqresp/metadata.py
     args:
       enr: *enr
 
