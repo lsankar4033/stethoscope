@@ -1,13 +1,14 @@
-from eth2spec.utils.ssz.ssz_typing import Container, uint64
-from eth2spec.phase0.spec import Root
-
-from typing import List
+from eth2spec.utils.ssz.ssz_typing import Container, uint64, List
+from eth2spec.phase0.spec import BeaconBlock, Root, SignedBeaconBlock
+from pyrum import SubprocessConn, Rumor
 
 from ..utils import connect_rumor, parse_args
 
+import trio
+
 
 class Request(Container):
-    roots: List[Root]
+    roots: List[Root, 64]
 
 
 async def test_blocks_by_root(enr, beacon_state):
@@ -20,7 +21,16 @@ async def test_blocks_by_root(enr, beacon_state):
                           ).encode_bytes.hex()
             resp = await rumor.rpc.blocks_by_root.req.raw(peer_id, req, raw=True)
 
-            # TODO!
+            blocks = []
+            async for chunk in rumor.rpc.blocks_by_root.req.raw(peer_id, req, raw=True).chunk():
+                if chunk['result_code'] == 0:
+                    block = SignedBeaconBlock.decode_bytes(bytes.fromhex(chunk['data']))
+                    blocks.append(block)
+
+            assert block == [SignedBeaconBlock(
+                message=BeaconBlock(
+                    state_root='0x363bcbffb8bcbc8db51bda09cb68a5a3cc7cb2c1b79f8301a3157e37e24c687d')
+            )], f'actual blocks: {blocks}'
 
             nursery.cancel_scope.cancel()
 
