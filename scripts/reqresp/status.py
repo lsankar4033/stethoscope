@@ -27,9 +27,8 @@ async def test_status(enr, beacon_state_path):
 
             assert resp_status == Request(
                 version=resp_status.version,
-                # TODO: derive this from beacon_state
                 head_root='0xef64a1b94652cd9070baa4f9c0e8b1ce624bdb071b77b51b1a54b8babb1a5cd2',
-            )
+            ), f'actual status: {resp_status}'
 
             nursery.cancel_scope.cancel()
 
