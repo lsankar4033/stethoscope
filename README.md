@@ -54,12 +54,14 @@ The former are things like how a single client responds to valid or invalid mess
 
 ### 1
 
-_TODO_: add remaining TODO tests (invalid messages, more gossip, discv5 tests, security+feature based tests)
-
 | type   | test             |                         status                        |
 |----------|-----------------------|:-----------------------------------------------------:|
 | req/resp | valid responses for each request  | [done](tests/single_client_genesis.yml#L15-46)        |
-| gossip   | topic membership      | [done](tests/single_client_genesis.yml#L33-37)        |
+| gossip   | expected topic membership      | [done](tests/single_client_genesis.yml#L33-37)        |
+| feature   | snappy compression enabled      | TODO        |
+| feature   | noise encryption enabled      | TODO        |
+
+Still need to add tests for discv5, more gossip tests. please share ideas!
 
 ### 2
 
