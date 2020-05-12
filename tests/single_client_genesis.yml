@@ -2,14 +2,14 @@ instances:
   - client: all
     beacon_state_path: &beacon_state_path ssz/single_client_genesis.ssz
     enr:
-      enr: &enr 'enr:-Iu4QIS99y_PyET83eyeAsS463grgYSm1tY6KaVljNjMMZhfFbqo2X0lXe8Lu19O_njq3-EZV9_dhiun5dJ4jOp5uVIBgmlkgnY0gmlwhH8AAAGJc2VjcDI1NmsxoQOnBq2PcxFfkFACZvJz91cd-UKaTPtLv7zYJSJyAtq60YN0Y3CCIyiDdWRwgiMo'
+      enr: &enr 'enr:-LK4QJCIZoViytOOmAzAbdOJODwQ36PhjXwvXlTFTloTzpawVpvPRmtrM6UZdPmOGck5yPZ9AbgmwyZnE3jm4jX0Yx0Bh2F0dG5ldHOIAAAAAAAAAACEZXRoMpBGMkSJAAAAAf__________gmlkgnY0gmlwhH8AAAGJc2VjcDI1NmsxoQOnBq2PcxFfkFACZvJz91cd-UKaTPtLv7zYJSJyAtq60YN0Y3CCIyiDdWRwgiMp'
       private_key: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
       udp: 9001
       tcp: 9000
+      id: 'v4'
       ip: 127.0.0.1
       attnets: '0x0000000000000000'
-      eth2: '0x4632448900000001ffffffffffffffff'
-
+      eth2: '0x4632448900000001ffffffffffffffff' # TODO: this needs to be defined based on version of client fork digest
 
 test_suite:
   - name: reqresp status
