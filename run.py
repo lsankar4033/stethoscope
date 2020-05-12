@@ -5,7 +5,6 @@ import yaml
 from lib.console import ConsoleWriter
 from lib.fixtures import extract_fixtures, setup_fixture, teardown_fixture
 from lib.runner import run_test_suite
-from lib.types import ENR, InstanceConfig
 
 TESTS_DIR = 'tests'
 
