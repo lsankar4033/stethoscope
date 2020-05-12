@@ -1,17 +1,57 @@
 #!/bin/bash
+#
+# Startup script for the lighthouse client
 
+# TODO: use an image name that's passed in! To allow multiple lighthouse clients
+# Default values of arguments
+TCP=9000
+UDP=9001
+IP='127.0.0.1'
+PRIVATE_KEY='0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+BEACON_STATE_PATH='ssz/single_client_genesis.ssz'
+
+# Parse arguments
+for arg in "$@"
+do
+    case $arg in
+      -t=*|--tcp=*)
+        TCP="${arg#*=}"
+        shift
+        ;;
+      -u|--udp=*)
+        UDP="${arg#*=}"
+        shift
+        ;;
+      -i|--ip=*)
+        IP="${arg#*=}"
+        shift
+        ;;
+      -p|--private-key=*)
+        PRIVATE_KEY="${arg#*=}"
+        shift
+        ;;
+      -b|--beacon-state-path=*)
+        BEACON_STATE_PATH="${arg#*=}"
+        shift
+        ;;
+    esac
+done
+
+# Create lighthouse container
 docker pull sigp/lighthouse:latest
-
-# TODO: use a name that's passed in! To allow multiple lighthouse clients
-# TODO: use args for single_client_genesis, port(s), address, privkey
-docker create --name lighthouse -p 9000:9000 -p 9001:9001 sigp/lighthouse:latest bin/bash -c \
+docker create --name lighthouse -p $TCP:$TCP -p $UDP:$UDP sigp/lighthouse:latest bin/bash -c \
   "lcli --spec minimal new-testnet --testnet-dir /testnet --deposit-contract-address 0000000000000000000000000000000000000000 && \
   cp /genesis.ssz /testnet/genesis.ssz && \
-  lighthouse bn --testnet-dir /testnet --spec minimal --dummy-eth1 \
-    --enr-tcp-port 9000 \
-    --enr-udp-port 9001 \
-    --enr-address 127.0.0.1 \
-    --p2p-priv-key 0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+  lighthouse bn --testnet-dir /testnet \
+    --spec minimal \
+    --dummy-eth1 \
+    --port $TCP \
+    --enr-udp-port $UDP \
+    --enr-address $IP \
+    --p2p-priv-key $PRIVATE_KEY"
 
-docker cp ssz/single_client_genesis.ssz lighthouse:/genesis.ssz
+# Copy beacon state file into the container
+docker cp $BEACON_STATE_PATH lighthouse:/genesis.ssz
+
+# Start the container
 docker start lighthouse

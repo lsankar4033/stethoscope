@@ -53,6 +53,16 @@ def teardown_fixture(fixture: Fixture):
         stop_instance(instance)
 
 
+def start_arg_list(config: InstanceConfig):
+    return [
+        f'--tcp={config.enr.tcp}',
+        f'--udp={config.enr.udp}',
+        f'--ip={config.enr.ip}',
+        f'--private-key={config.enr.private_key}',
+        f'--beacon-state-path={config.beacon_state_path}',
+    ]
+
+
 def start_instance(instance_config: InstanceConfig, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL):
     if instance_config.client not in set(supported_clients):
         raise ValueError(
@@ -60,8 +70,7 @@ def start_instance(instance_config: InstanceConfig, stdout=subprocess.DEVNULL, s
 
     start_script = f'clients/{instance_config.client}/start.sh'
     output = subprocess.run(
-        # TODO: pass in startup args
-        ['sh', start_script],
+        ['sh', start_script] + start_arg_list(instance_config),
         stdout=stdout,
         stderr=stderr,
         text=True

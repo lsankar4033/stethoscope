@@ -5,6 +5,7 @@ class ENR(NamedTuple):
     private_key: str
     tcp: int
     udp: int
+    id: str
     ip: int
     enr: str
     attnets: str
