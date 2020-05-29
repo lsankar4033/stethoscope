@@ -1,5 +1,3 @@
-from pyrum import SubprocessConn, Rumor
-
 import argparse
 import trio
 
