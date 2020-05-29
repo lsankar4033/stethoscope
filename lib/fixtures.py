@@ -23,13 +23,16 @@ def client_supported(client):
 supported_clients = list(filter(client_supported, all_clients))
 
 
-def extract_fixtures(config) -> List[Fixture]:
-    # turn a yml config into a list of fixtures. if any 'all' in the file, do 1:1 for all alls (rather than all
+def extract_fixtures(config, clients_to_test=all_clients) -> List[Fixture]:
+    # turn a yml config into a list of fixtures. if any 'all' in the file, do 1:1 for every one (rather than all
     # pairwise combos)
     if any((i['client'] == 'all' for i in config['instances'])):
         fixtures = []
 
         for client in all_clients:
+            if client not in clients_to_test:
+                continue
+
             # convert 'all' instances to $client
             def convert(ic): return ic._replace(client=client) if ic.client == 'all' else ic
 
@@ -37,6 +40,10 @@ def extract_fixtures(config) -> List[Fixture]:
             fixtures.append(fixture)
 
         return fixtures
+
+    # if any clients in the fixture are not among those specified in clients_to_test, return no fixtures
+    elif any((i['client'] not in clients_to_test for i in config['instances'])):
+        return []
 
     else:
         fixture = Fixture(None, [InstanceConfig.from_dict(i) for i in config['instances']])
