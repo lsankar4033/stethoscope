@@ -6,11 +6,11 @@ from lib.console import ConsoleWriter
 from lib.fixtures import all_clients, extract_fixtures, setup_fixture, teardown_fixture
 from lib.runner import run_test_suite
 
-TESTS_DIR = 'tests'
+SUITES_DIR = 'suites'
 
 
 def run_suite(suite, clients):
-    suite_file = f'{TESTS_DIR}/{suite}.yml'
+    suite_file = f'{SUITES_DIR}/{suite}.yml'
     with open(suite_file, 'r') as f:
         full_config = yaml.load(f, Loader=yaml.Loader)
 
@@ -35,7 +35,7 @@ def run_suite(suite, clients):
 
 
 def run_all_suites(clients):
-    for suite_file in os.listdir(TESTS_DIR):
+    for suite_file in os.listdir(SUITES_DIR):
         if suite_file.endswith('.yml'):
             run_suite(suite_file[0:len(suite_file) - 4], clients)
 
