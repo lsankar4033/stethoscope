@@ -1,4 +1,5 @@
 import os
+import subprocess
 
 from pyrum import SubprocessConn, Rumor
 import trio
@@ -58,18 +59,38 @@ async def connect_rumor(rumor, enr):
 
 async def test_lighthouse():
     config = InstanceConfig('lighthouse', BEACON_STATE_LOCATION, TEST_ENR)
-
-    # TODO: pass in stdout so that we can inspect what happens behind the scenes
     start_instance(config)
 
     try:
         async with SubprocessConn(cmd='rumor bare') as conn:
             async with trio.open_nursery() as nursery:
                 rumor = Rumor(conn, nursery)
-                # peer_id = await connect_rumor(rumor, TEST_ENR.enr)
+                peer_id = await connect_rumor(rumor, TEST_ENR.enr)
+                print(f'lighthouse peer_id: {peer_id}')
 
                 # NOTE: this may not be the exact test
-                #assert peer_id is not None
+                assert peer_id is not None
+                nursery.cancel_scope.cancel()
+
+    finally:
+        stop_instance(config)
+
+
+async def test_prysm():
+    config = InstanceConfig('prysm', BEACON_STATE_LOCATION, TEST_ENR)
+
+    start_instance(config)
+
+    try:
+        async with SubprocessConn(cmd='rumor bare') as conn:
+            async with trio.open_nursery() as nursery:
+                rumor = Rumor(conn, nursery)
+                peer_id = await connect_rumor(rumor, TEST_ENR.enr)
+                print(f'prysm peer_id: {peer_id}')
+
+                # NOTE: this may not be the exact test
+                assert peer_id is not None
+                nursery.cancel_scope.cancel()
 
     finally:
         stop_instance(config)
