@@ -52,6 +52,10 @@ def extract_fixtures(config, clients_to_test=all_clients) -> List[Fixture]:
 
 def setup_fixture(fixture: Fixture):
     for instance in fixture.instances:
+        if instance.client not in set(supported_clients):
+            raise ValueError(
+                f"can't start instance: client {instance_config.client} not supported yet")
+
         start_instance(instance)
 
 
@@ -71,10 +75,6 @@ def start_arg_list(config: InstanceConfig):
 
 
 def start_instance(instance_config: InstanceConfig, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL):
-    if instance_config.client not in set(supported_clients):
-        raise ValueError(
-            f"can't start instance: client {instance_config.client} not supported yet")
-
     start_script = f'clients/{instance_config.client}/start.sh'
     output = subprocess.run(
         ['sh', start_script] + start_arg_list(instance_config),
