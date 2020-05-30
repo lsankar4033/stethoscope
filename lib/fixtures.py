@@ -88,7 +88,7 @@ def start_instance(instance_config: InstanceConfig, stdout=subprocess.DEVNULL, s
 
 def stop_instance(instance_config: InstanceConfig, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL):
     output = subprocess.run(
-        ['sh', 'clients/lighthouse/stop.sh'],
+        ['sh', f'clients/{instance_config.client}/stop.sh'],
         stdout=stdout,
         stderr=stderr,
         text=True
