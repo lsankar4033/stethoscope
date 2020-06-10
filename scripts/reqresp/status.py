@@ -2,9 +2,10 @@ from eth2spec.utils.ssz.ssz_typing import (
     Bytes4, Bytes32, Container, uint64
 )
 from pyrum import SubprocessConn, Rumor
-from ..utils import parse_args, connect_rumor
-
+from sclients import connect_rumor
 import trio
+
+from ..utils import parse_args
 
 
 class Request(Container):

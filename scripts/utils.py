@@ -1,11 +1,4 @@
 import argparse
-import trio
-
-
-async def connect_rumor(rumor, enr):
-    await rumor.host.start()
-    peer_id = await rumor.peer.connect(enr).peer_id()
-    return peer_id
 
 
 def parse_args(*args):

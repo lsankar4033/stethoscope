@@ -1,8 +1,9 @@
 from eth2spec.utils.ssz.ssz_typing import uint64, List
 from eth2spec.phase0.spec import BeaconBlock, Root, SignedBeaconBlock
 from pyrum import SubprocessConn, Rumor
+from sclients import connect_rumor
 
-from ..utils import connect_rumor, parse_args
+from ..utils import parse_args
 
 import trio
 
