@@ -1,6 +1,8 @@
 from eth2spec.utils.ssz.ssz_typing import uint64
 from pyrum import SubprocessConn, Rumor
-from ..utils import parse_args, connect_rumor
+from sclients import connect_rumor
+
+from ..utils import parse_args
 
 import trio
 

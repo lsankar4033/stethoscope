@@ -1,6 +1,8 @@
 from pyrum import Rumor
 from pyrum import SubprocessConn, Rumor
-from ..utils import parse_args, connect_rumor
+from sclients import connect_rumor
+
+from ..utils import parse_args
 
 import trio
 
