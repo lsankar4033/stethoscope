@@ -1,21 +1,29 @@
 # stethoscope
-Stethoscope is a suite of networking tests for eth2 beacon-chain clients that are designed to be readable and runnable by anyone.
+Stethoscope is an Eth 2.0 scenario runner that works with real, running clients. 
 
-## Overview
-Consistency in basic client networking is an important challenge to solve to get to a multi-client Eth2 mainnet. There are already some [great](https://github.com/protolambda/rumor) [tools](https://github.com/prrkl/docs/blob/master/project-overview.md) that are client agnostic and allow manual network debugging/testing.
+Right now it's used for single-client regression tests. In the future, we hope to also use it to run multi-client scenarios as a tool for bug discovery.
 
-Stethoscope is complementary to these tools in the same way that the eth2spec is complementary to client implementations. It's both:
+## Background
 
-1. a repository of test cases
-2. a test runner to run said test cases
+If we're to have a mutli-client Eth 2.0 mainnet, we're going to need to do multi-client testing. Even though individual clients adhere to the [spec](https://github.com/ethereum/eth2.0-specs) and are rigorously tested internally, there are likely to be divergent assumptions in client implementation that only show up when multiple clients talk to each other.
 
-Tests are grouped by the 'fixture' of client instances required to set them up (to allow re-use of a set of instances). As an example, see the [single\_client\_genesis](tests/single_client_genesis.yml) group. 
+Testnets will capture much of this, but they aren't the best tool for closely examining specific multi-client scenarios (called 'suites' in this project). Stethoscope aims to fill that gap. 
 
-Each test is identified by a python script (i.e. [the gossip topic membership test](https://github.com/lsankar4033/stethoscope/blob/master/scripts/gossip/topic_membership.py)) that uses [rumor](https://github.com/protolambda/rumor) to drive clients behind the scenes. 
+Suites are defined by:
 
-## Usage
+1. the client instances involved
+2. the rumor-driven scripts to run
 
-### Prereqs
+and are defined in yaml, as seen [here](suites/single_client_genesis.yml).
+
+Suites can refer to specific scripts to run, such as [this](https://github.com/lsankar4033/stethoscope/blob/master/scripts/reqresp/metadata.py).
+
+## Single-client tests
+This section will outline how to run the single-client tests in stethoscope.
+
+### Usage
+
+#### Prereqs
 Install:
 
 - [python3](https://wiki.python.org/moin/BeginnersGuide/Download)
@@ -23,14 +31,13 @@ Install:
 - [rumor](https://github.com/protolambda/rumor)
 - [docker](https://docs.docker.com/get-docker/)
 
-### Run locally
+#### Run locally
 Clone the repo and install requirements:
 
 ```bash
-$ https://github.com/lsankar4033/stethoscope.git && cd stethoscope
+$ git clone https://github.com/lsankar4033/stethoscope.git && cd stethoscope
 ...
 $ pip install -r requirements.txt
-
 ```
 Then, run a single test suite (in this case [single\_client\_genesis](tests/single_client_genesis.yml):
 
@@ -44,41 +51,16 @@ Or run all tests:
 $ python run.py
 ```
 
-## Testing plan and progress
-There are two classes of tests that stethoscope is intended to cover:
+### Testing plan
+| type   |                         status                        |
+|----------|:-----------------------------------------------------:|
+| req/resp   | [done](tests/single_client_genesis.yml#L15-46)        |
+| gossip     | In progress |
+| discv5 | TODO | 
 
-1. sanity checks
-2. edge cases discovered by other testing
-
-The former are things like how a single client responds to valid or invalid messages on each network domain and the latter are more nuanced edge cases that come out of other testing efforts and conversations.
-
-### 1
-
-| type   | test             |                         status                        |
-|----------|-----------------------|:-----------------------------------------------------:|
-| req/resp | valid responses for each request  | [done](tests/single_client_genesis.yml#L15-46)        |
-| gossip   | expected topic membership      | [done](tests/single_client_genesis.yml#L33-37)        |
-| feature   | snappy compression enabled      | TODO        |
-| feature   | noise encryption enabled      | TODO        |
-
-Still need to add tests for discv5, more gossip tests. please share ideas!
-
-### 2
-
-TODO! If you have ideas, please make a github issue! Note that multi-client tests are possible.
-
-## Client start/stop scripts
-
-Each client needs bash scripts for starting and stopping, as seen for lighthouse [here](https://github.com/lsankar4033/stethoscope/tree/master/clients/lighthouse).
-
-These scripts need to take [initialization parameters](https://github.com/lsankar4033/stethoscope/blob/master/tests/single_client_genesis.yml#L3-L11) as input. This allows started instances to be discoverable by their tests and to have a predictable beacon state.
+## Multi-client scenarios
+TODO!
 
 ## Contributions
-Contributions extremely welcome! Especially in the realm of:
-
-1. new test cases
-2. scripts to run each client
-
-
-## Acknowledgements
+Contributions extremely welcome! Especially in the realm of test scenarios to examine
 
