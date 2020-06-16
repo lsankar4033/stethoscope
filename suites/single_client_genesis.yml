@@ -12,40 +12,40 @@ instances:
       eth2: '0x4632448900000001ffffffffffffffff' # TODO: this needs to be defined based on version of client fork digest
 
 test_suite:
-  - name: reqresp status
+  - name: reqresp.status
     description: Checks that status endpoint is responsive
     script: scripts/reqresp/status.py
     args:
       enr: *enr
       beacon_state_path: *beacon_state_path
 
-  - name: reqresp blocks-by-root
+  - name: reqresp.blocks-by-root
     description: Checks that blocks_by_root endpoint is responsive
     script: scripts/reqresp/blocks_by_root.py
     args:
       enr: *enr
       beacon_state_path: *beacon_state_path
 
-  - name: reqresp blocks-by-range
+  - name: reqresp.blocks-by-range
     description: Checks that blocks_by_range endpoint is responsive
     script: scripts/reqresp/blocks_by_range.py
     args:
       enr: *enr
       beacon_state_path: *beacon_state_path
 
-  - name: reqresp ping
+  - name: reqresp.ping
     description: Checks that ping endpoint is responsive
     script: scripts/reqresp/ping.py
     args:
       enr: *enr
 
-  - name: reqresp metadata
+  - name: reqresp.metadata
     description: Checks that metadata endpoint is responsive
     script: scripts/reqresp/metadata.py
     args:
       enr: *enr
 
-  - name: gossip check-topics
+  - name: gossip.check-topics
     description: Checks that the node is subscribed to all expected gossipsub topics
     script: scripts/gossip/topic_membership.py
     args:
