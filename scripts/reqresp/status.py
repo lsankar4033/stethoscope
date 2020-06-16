@@ -5,7 +5,7 @@ from pyrum import SubprocessConn, Rumor
 from sclients import connect_rumor
 import trio
 
-from ..utils import parse_args
+from ..utils import compare_containers, parse_args
 
 
 class Request(Container):
@@ -23,13 +23,17 @@ async def test_status(enr, beacon_state_path):
             peer_id = await connect_rumor(rumor, enr)
 
             req = Request(head_slot=0).encode_bytes().hex()
-            resp = await rumor.rpc.status.req.raw(peer_id, req, raw=True)
+            resp = await rumor.rpc.status.req.raw(peer_id, req, raw=True, compression='snappy')
             resp_status = Request.decode_bytes(bytes.fromhex(resp['chunk']['data']))
 
-            assert resp_status == Request(
-                version=resp_status.version,
-                head_root='0xef64a1b94652cd9070baa4f9c0e8b1ce624bdb071b77b51b1a54b8babb1a5cd2',
-            ), f'actual status: {resp_status}'
+            compare_containers(
+                Request(
+                    version=resp_status.version,
+                    finalized_root='0x0000000000000000000000000000000000000000000000000000000000000000',
+                    head_root='0xef64a1b94652cd9070baa4f9c0e8b1ce624bdb071b77b51b1a54b8babb1a5cd2',
+                ),
+                resp_status
+            )
 
             nursery.cancel_scope.cancel()
 

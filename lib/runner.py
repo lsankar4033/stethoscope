@@ -20,7 +20,7 @@ def run_script(script, args, cw):
 
     if len(output.stderr) > 0:
         cw.fail('FAILED')
-        print(output.stderr)
+        cw.info(output.stderr)
 
     else:
         cw.success('SUCCESS')
