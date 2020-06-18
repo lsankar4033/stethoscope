@@ -17,7 +17,7 @@ async def test_blocks_by_root(enr, beacon_state):
             req = List[Root, 64](
                 ['ef64a1b94652cd9070baa4f9c0e8b1ce624bdb071b77b51b1a54b8babb1a5cd2']).encode_bytes().hex()
             blocks = []
-            async for chunk in rumor.rpc.blocks_by_root.req.raw(peer_id, req, raw=True).chunk():
+            async for chunk in rumor.rpc.blocks_by_root.req.raw(peer_id, req, raw=True, compression='snappy').chunk():
                 if chunk['result_code'] == 0:
                     block = SignedBeaconBlock.decode_bytes(bytes.fromhex(chunk['data']))
                     blocks.append(block)
