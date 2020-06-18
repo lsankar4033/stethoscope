@@ -4,4 +4,4 @@ pyrum==0.2.1
 git+https://github.com/ethereum/eth2.0-specs@v0.12.0
 PyYAML==5.3.1
 trio==0.13.0
-stethoscope-clients==0.1.2
+stethoscope-clients==0.1.3
