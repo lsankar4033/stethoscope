@@ -23,3 +23,11 @@ def compare_containers(expected: Container, actual: Container):
                     f'{field} -- expected {getattr(expected, field)} actual {getattr(actual, field)}',
                     file=sys.stderr
                 )
+
+
+def parse_response(resp):
+    if not('chunk' in resp and 'data' in resp['chunk']):
+        print(f'received bad response: {resp}', file=sys.stderr)
+        return None
+
+    return resp['chunk']['data']
