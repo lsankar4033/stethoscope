@@ -1,10 +1,11 @@
+import sys
+
+import trio
 from eth2spec.utils.ssz.ssz_typing import uint64
 from pyrum import SubprocessConn, Rumor
 from sclients import connect_rumor
 
-from ..utils import parse_args
-
-import trio
+from ..utils import *
 
 
 async def test_ping(enr):
@@ -15,10 +16,16 @@ async def test_ping(enr):
 
             for i in range(5):
                 req = uint64(i).encode_bytes().hex()
-                resp = await rumor.rpc.ping.req.raw(peer_id, req, raw=True)
-                pong = uint64.decode_bytes(bytes.fromhex(resp['chunk']['data']))
+                resp = await rumor.rpc.ping.req.raw(peer_id, req, raw=True, compression='snappy')
+                resp_data = parse_response(resp)
 
-                assert pong == 1, f'actual ping response: {pong}'
+                pong = uint64.decode_bytes(bytes.fromhex(resp_data))
+
+                if not isinstance(pong, int) or pong < 0:
+                    print(
+                        f'ping -- invalid ping response: {pong}',
+                        file=sys.stderr
+                    )
 
             nursery.cancel_scope.cancel()
 

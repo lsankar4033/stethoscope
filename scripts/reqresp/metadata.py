@@ -2,7 +2,7 @@ from eth2spec.utils.ssz.ssz_typing import uint64, Bitvector, Container
 from pyrum import SubprocessConn, Rumor
 from sclients import connect_rumor
 
-from ..utils import parse_args
+from ..utils import *
 
 import trio
 
@@ -18,10 +18,16 @@ async def test_metadata(enr):
             rumor = Rumor(conn, nursery)
             peer_id = await connect_rumor(rumor, enr)
 
-            resp = await rumor.rpc.metadata.req.raw(peer_id, '', raw=True)
-            metadata = Metadata.decode_bytes(bytes.fromhex(resp['chunk']['data']))
+            resp = await rumor.rpc.metadata.req.raw(peer_id, '', raw=True, compression='snappy')
+            resp_data = parse_response(resp)
 
-            assert metadata == Metadata(seq_number=1), f'actual metadata: {metadata}'
+            if resp_data is not None:
+                resp_metadata = Metadata.decode_bytes(bytes.fromhex(resp_data))
+
+                compare_containers(
+                    Metadata(seq_number=resp_metadata.seq_number),
+                    resp_metadata
+                )
 
             nursery.cancel_scope.cancel()
 
