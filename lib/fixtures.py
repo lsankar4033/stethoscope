@@ -46,4 +46,4 @@ def setup_fixture(fixture: Fixture):
 
 def teardown_fixture(fixture: Fixture):
     for instance in fixture.instances:
-        stop_instance(instance)
+        stop_instance(instance.client)
