@@ -3,7 +3,7 @@ from eth2spec.phase0.spec import BeaconBlock, Root, SignedBeaconBlock
 from pyrum import SubprocessConn, Rumor
 from sclients import connect_rumor
 
-from ..utils import parse_args
+from ..utils import *
 
 import trio
 
@@ -22,10 +22,11 @@ async def test_blocks_by_root(enr, beacon_state):
                     block = SignedBeaconBlock.decode_bytes(bytes.fromhex(chunk['data']))
                     blocks.append(block)
 
-            assert blocks == [SignedBeaconBlock(
+            compare_vals(1, len(blocks), 'num_blocks')
+            compare_containers(SignedBeaconBlock(
                 message=BeaconBlock(
                     state_root='0x363bcbffb8bcbc8db51bda09cb68a5a3cc7cb2c1b79f8301a3157e37e24c687d')
-            )], f'actual blocks: {blocks}'
+            ), blocks[0])
 
             nursery.cancel_scope.cancel()
 

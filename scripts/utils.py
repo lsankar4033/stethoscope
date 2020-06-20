@@ -18,11 +18,15 @@ def compare_containers(expected: Container, actual: Container):
     if expected != actual:
         error_str = ''
         for field in expected.fields():
-            if getattr(expected, field) != getattr(actual, field):
-                print(
-                    f'{field} -- expected {getattr(expected, field)} actual {getattr(actual, field)}',
-                    file=sys.stderr
-                )
+            compare_vals(getattr(expected, field), getattr(actual, field), field)
+
+
+def compare_vals(expected, actual, name):
+    if expected != actual:
+        print(
+            f'{name} -- expected {expected} actual {actual}',
+            file=sys.stderr
+        )
 
 
 def parse_response(resp):

@@ -3,7 +3,7 @@ from eth2spec.phase0.spec import BeaconBlock, SignedBeaconBlock, Slot
 from pyrum import SubprocessConn, Rumor
 from sclients import connect_rumor
 
-from ..utils import parse_args
+from ..utils import *
 
 import trio
 
@@ -26,15 +26,16 @@ async def test_blocks_by_range(enr, beacon_state):
             ).encode_bytes().hex()
 
             blocks = []
-            async for chunk in rumor.rpc.blocks_by_range.req.raw(peer_id, req, raw=True).chunk():
+            async for chunk in rumor.rpc.blocks_by_range.req.raw(peer_id, req, raw=True, compression='snappy').chunk():
                 if chunk['result_code'] == 0:
                     block = SignedBeaconBlock.decode_bytes(bytes.fromhex(chunk['data']))
                     blocks.append(block)
 
-            assert blocks == [SignedBeaconBlock(
+            compare_vals(1, len(blocks), 'num_blocks')
+            compare_containers(SignedBeaconBlock(
                 message=BeaconBlock(
                     state_root='0x363bcbffb8bcbc8db51bda09cb68a5a3cc7cb2c1b79f8301a3157e37e24c687d')
-            )], f'actual blocks: {blocks}'
+            ), blocks[0])
 
             nursery.cancel_scope.cancel()
 
