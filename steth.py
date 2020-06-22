@@ -45,7 +45,7 @@ def run_test(args):
     suite = args.suite
 
     reuse_clients = args.reuse
-    tests_to_run = args.only
+    test_filter = args.only
 
     cw = ConsoleWriter(suite, None, None)
 
@@ -55,7 +55,7 @@ def run_test(args):
         cw = cw._replace(fixture=fixture.name)
 
         if reuse_clients:
-            run_test_config(config, cw, tests_to_run)
+            run_test_config(config, cw, test_filter)
 
         else:
             try:
@@ -67,7 +67,7 @@ def run_test(args):
                 continue
 
             try:
-                run_test_config(config, cw, tests_to_run)
+                run_test_config(config, cw, test_filter)
 
             finally:
                 cw.info('tearing down fixture')
@@ -93,7 +93,7 @@ if __name__ == '__main__':
     test = steth_sub.add_parser('test', help='Run stethoscope unit tests')
     test.add_argument('-c', '--client',
                       help='run test(s) for a specific client. possible values: {SUPPORTED_CLIENTS}')
-    test.add_argument('-o', '--only', help='run specific tests by name', nargs='*')
+    test.add_argument('-o', '--only', help='run specific tests by name')
     test.add_argument('-r', '--reuse', default=False, action='store_true', help='reuse running fixtures')
     test.add_argument('-s', '--suite', help='suite file to parse fixtures from', required=True)
     test.set_defaults(func=run_test)

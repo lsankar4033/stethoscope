@@ -31,11 +31,15 @@ def script_to_test(script):
     return remove_prefix_suffix.replace('/', '.')
 
 
-def run_test_config(test_config, cw=ConsoleWriter(None, None, None), tests_to_run=[]):
+def test_matches_filter(test, test_filter):
+    return test_filter is None or test == test_filter or test.startswith(test_filter)
+
+
+def run_test_config(test_config, cw=ConsoleWriter(None, None, None), test_filter=None):
     tests = test_config['test_suite']
 
     for test in tests:
-        if len(tests_to_run) == 0 or test['name'] in tests_to_run:
+        if test_matches_filter(test['name'], test_filter):
             script = test['script']
             args = test['args']
 
