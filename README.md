@@ -42,21 +42,22 @@ $ pip install -r requirements.txt
 Then, run a single test suite (in this case [single\_client\_genesis](tests/single_client_genesis.yml):
 
 ```bash
-$ python run.py single_client_genesis
+$ ./steth.py -s single_client_genesis
 ```
 
 Or run all tests:
 
 ```bash
-$ python run.py
+$ ./steth.py
 ```
 
-### Testing plan
-| type   |                         status                        |
+### Tests
+| description   |                         status                        |
 |----------|:-----------------------------------------------------:|
-| req/resp   | [done](tests/single_client_genesis.yml#L15-46)        |
-| gossip     | In progress |
-| discv5 | TODO | 
+| responds to all req/resp methods  | done        |
+| subscribed to the right gossipsub topics     | done |
+| running disc5 and is 'lookup-able' | in progress |
+| client re-gossips messages | TODO | 
 
 ## Multi-client scenarios
 TODO!
