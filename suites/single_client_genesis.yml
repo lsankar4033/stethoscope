@@ -50,3 +50,9 @@ test_suite:
     script: scripts/gossip/topic_membership.py
     args:
       enr: *enr
+
+  - name: dv5.single-node
+    description: Check that a dv5 connection with a single node works as expected
+    script: scripts/dv5/single_node.py
+    args:
+      enr: *enr
