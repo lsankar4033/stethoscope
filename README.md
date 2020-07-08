@@ -56,8 +56,8 @@ $ ./steth.py
 |----------|:-----------------------------------------------------:|
 | responds to all req/resp methods  | done        |
 | subscribed to the right gossipsub topics     | done |
-| running disc5 and is 'lookup-able' | in progress |
-| client re-gossips messages | TODO | 
+| is running disc5 and is 'lookup-able' | in progress |
+| re-gossips gossiped messages | TODO | 
 
 ## Multi-client scenarios
 TODO!
