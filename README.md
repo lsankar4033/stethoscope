@@ -52,12 +52,7 @@ $ ./steth.py
 ```
 
 ### Tests
-| description   |                         status                        |
-|----------|:-----------------------------------------------------:|
-| responds to all req/resp methods  | done        |
-| subscribed to the right gossipsub topics     | done |
-| is running disc5 and is 'lookup-able' | in progress |
-| re-gossips gossiped messages | TODO | 
+See [here](https://hackmd.io/fBgz1UO7TsK_oAABtLNnlQ?view) 
 
 ## Multi-client scenarios
 TODO!
