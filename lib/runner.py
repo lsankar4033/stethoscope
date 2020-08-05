@@ -41,14 +41,12 @@ def run_module(module, args, cw):
         cw.fail(f'module {module} does not have a run method')
         return
 
-    return_code, msgs = trio.run(module.run, args)
+    return_code = trio.run(module.run, args)
     if return_code == 0:
         cw.success('SUCCESS')
 
     else:
         cw.fail('FAILED')
-        for msg in msgs:
-            cw.info(msg)
 
 
 def test_matches_filter(test, test_filter):
@@ -65,10 +63,4 @@ def run_test_config(test_config, cw=ConsoleWriter(None, None, None), test_filter
 
             cw = cw._replace(test=script_to_test(script))
 
-            # NOTE: special casing this single test for the time being. This should be the normal case going
-            # forward
-            if test['name'] == 'dv5.single-node':
-                run_module(script_to_module(script), args, cw)
-
-            else:
-                run_script(script, args, cw)
+            run_module(script_to_module(script), args, cw)

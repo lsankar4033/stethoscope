@@ -1,7 +1,25 @@
 import argparse
 import sys
+import trio
 
 from eth2spec.utils.ssz.ssz_typing import Container
+from pyrum import SubprocessConn, Rumor
+
+from lib.console import ConsoleWriter
+
+def with_rumor(async_run_fn):
+    async def wrapped_run_fn(args):
+        async with SubprocessConn(cmd='rumor bare --level=trace') as conn:
+            async with trio.open_nursery() as nursery:
+                try:
+                    rumor = Rumor(conn, nursery)
+                    response_code = await async_run_fn(rumor, args)
+                    return response_code
+
+                finally:
+                    nursery.cancel_scope.cancel()
+
+    return wrapped_run_fn
 
 
 def parse_args(*args):
