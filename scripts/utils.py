@@ -47,9 +47,36 @@ def compare_vals(expected, actual, name):
         )
 
 
+# NOTE: Eventually, return code will be handled on an object
 def parse_response(resp):
     if not('chunk' in resp and 'data' in resp['chunk']):
-        print(f'received bad response: {resp}', file=sys.stderr)
-        return None
+        return (1, None)
 
-    return resp['chunk']['data']
+    return (0, resp['chunk']['data'])
+
+class TestBase:
+
+    def __init__(self, args, cw=ConsoleWriter(None, None, None)):
+        self.args = args
+        self.cw = cw
+        self.return_code = 0
+
+    def parse_rumor_response(self, resp):
+        if not('chunk' in resp and 'data' in resp['chunk']):
+            self.cw.info(f'received bad response: {resp}', file=sys.stderr)
+            self.return_code = 1
+            return None
+
+        return resp['chunk']['data']
+
+    def compare_containers(self, expected: Container, actual: Container):
+        if expected != actual:
+            error_str = ''
+            for field in expected.fields():
+                self.compare_vals(getattr(expected, field), getattr(actual, field), field)
+
+
+    def compare_vals(self, expected, actual, name):
+        if expected != actual:
+            self.cw.info(f'{name} -- expected {expected} actual {actual}')
+            self.return_code = 1

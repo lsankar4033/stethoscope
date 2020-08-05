@@ -1,28 +1,22 @@
-from pyrum import SubprocessConn, Rumor
-import trio
+from .utils import with_rumor
 
+@with_rumor
+async def run(rumor, args):
+    try:
+        await rumor.host.start()
 
-async def run(args):
-    async with SubprocessConn(cmd='rumor bare') as conn:
-        async with trio.open_nursery() as nursery:
-            try:
-                rumor = Rumor(conn, nursery)
-                await rumor.host.start()
+        # TODO: check type of result
+        enr = await rumor.enr.make()
+        await rumor.dv5.run(args['enr'])
 
-                # TODO: check type of result
-                enr = await rumor.enr.make()
+        # TODO: result validation
+        result = await rumor.dv5.ping(target=args['enr'])
+        # TODO: result validation
+        result = await rumor.dv5.lookup(target=args['enr')
 
-                await rumor.dv5.run(args['enr'])
+        await rumor.dv5.cancel()
 
-                # TODO: result validation
-                result = await rumor.dv5.ping(target=args['enr'])
+        return 0
 
-                # TODO: result validation
-                result = await rumor.dv5.lookup(target=args['enr')
-
-                await rumor.dv5.cancel()
-
-                return (0, None)
-
-            finally:
-                nursery.cancel_scope.cancel()
+    except:
+        return 1
