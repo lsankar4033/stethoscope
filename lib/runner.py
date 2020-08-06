@@ -5,6 +5,7 @@ import subprocess
 import trio
 
 from lib.console import ConsoleWriter
+from lib.instance_configs import DEFAULT_ARGS
 
 TESTS_DIR = 'scripts'
 
@@ -24,8 +25,8 @@ def file_to_module(script):
 
 
 # TODO: add args back in
-def run_module(module, cw):
-    print(f'Running module: {module}')
+def run_module(module, args, cw):
+    print(f'Running module: {module} with args {args}')
     #module = importlib.import_module(module)
 
     #if not hasattr(module, 'run'):
@@ -48,4 +49,4 @@ def run_all_tests(cw=ConsoleWriter(None, None), test_filter=None):
         if test_matches_filter(test_file, test_filter):
             cw = cw._replace(test=file_to_module(test_file))
 
-            run_module(file_to_module(test_file), cw)
+            run_module(file_to_module(test_file), DEFAULT_ARGS, cw)
