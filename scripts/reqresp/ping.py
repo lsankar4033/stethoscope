@@ -3,7 +3,6 @@ from eth2spec.utils.ssz.ssz_typing import uint64
 from pyrum import SubprocessConn, Rumor
 from sclients import connect_rumor
 
-from lib.console import ConsoleWriter
 from ..utils import parse_response, with_rumor
 
 

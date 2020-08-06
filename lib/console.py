@@ -3,25 +3,21 @@ from typing import NamedTuple
 
 
 class ConsoleWriter(NamedTuple):
-    suite: str
     fixture: str
     test: str
 
     def _prefix(self):
-        if self.suite is None and self.fixture is None and self.test is None:
+        if self.fixture is None and self.test is None:
             return ''
 
-        elif self.fixture is None and self.test is None:
-            return f'{self.suite}'
-
         elif self.fixture is None:
-            return f'{self.suite} -- {self.test}'
+            return f'{self.test}'
 
         elif self.test is None:
-            return f'{self.suite}[{self.fixture}]'
+            return f'{self.fixture}'
 
         else:
-            return f'{self.suite}[{self.fixture}] -- {self.test}'
+            return f'{self.fixture} -- {self.test}'
 
     def info(self, s):
         print(f'{self._prefix()} {s}')

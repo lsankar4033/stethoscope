@@ -7,25 +7,14 @@ from sclients import SUPPORTED_CLIENTS, stop_instance
 
 from lib.console import ConsoleWriter
 from lib.fixtures import extract_fixtures, setup_fixture, teardown_fixture
-from lib.runner import run_test_config
-
-SUITES_DIR = 'suites'
-
-
-def load_suite_config(suite):
-    suite_file = f'{SUITES_DIR}/{suite}.yml'
-    with open(suite_file, 'r') as f:
-        config = yaml.load(f, Loader=yaml.Loader)
-    return config
+from lib.runner import run_all_tests
 
 
 def run_start_fixture(args):
     client = args.client
-    suite = args.suite
-    cw = ConsoleWriter(suite, None, None)
+    cw = ConsoleWriter(None, None)
 
-    config = load_suite_config(suite)
-    fixtures = extract_fixtures(config, [client])
+    fixtures = extract_fixtures([client])
 
     for fixture in fixtures:
         cw = cw._replace(fixture=fixture.name)
@@ -34,7 +23,7 @@ def run_start_fixture(args):
 
 
 def run_stop_fixture(args):
-    cw = ConsoleWriter(None, None, None)
+    cw = ConsoleWriter(None, None)
     for client in SUPPORTED_CLIENTS:
         cw.info(f'stopping client {client}')
         stop_instance(client)
@@ -42,20 +31,18 @@ def run_stop_fixture(args):
 
 def run_test(args):
     clients = SUPPORTED_CLIENTS if args.client is None else [args.client]
-    suite = args.suite
 
     reuse_clients = args.reuse
     test_filter = args.only
 
-    cw = ConsoleWriter(suite, None, None)
+    cw = ConsoleWriter(None, None)
 
-    config = load_suite_config(suite)
-    fixtures = extract_fixtures(config, clients)
+    fixtures = extract_fixtures(clients)
     for fixture in fixtures:
         cw = cw._replace(fixture=fixture.name)
 
         if reuse_clients:
-            run_test_config(config, cw, test_filter)
+            run_all_tests(cw, test_filter)
 
         else:
             try:
@@ -67,7 +54,7 @@ def run_test(args):
                 continue
 
             try:
-                run_test_config(config, cw, test_filter)
+                run_all_tests(cw, test_filter)
 
             finally:
                 cw.info('tearing down fixture')
@@ -82,7 +69,6 @@ if __name__ == '__main__':
     fixture_sub = fixture.add_subparsers()
 
     start = fixture_sub.add_parser('start')
-    start.add_argument('-s', '--suite', help='suite file to parse fixtures from', required=True)
     start.add_argument(
         'client', help=f'client to start. can only start 1 at a time until dynamic ENRs implemented. possible values: {SUPPORTED_CLIENTS}')
     start.set_defaults(func=run_start_fixture)
@@ -95,7 +81,6 @@ if __name__ == '__main__':
                       help='run test(s) for a specific client. possible values: {SUPPORTED_CLIENTS}')
     test.add_argument('-o', '--only', help='run specific tests by name')
     test.add_argument('-r', '--reuse', default=False, action='store_true', help='reuse running fixtures')
-    test.add_argument('-s', '--suite', help='suite file to parse fixtures from', required=True)
     test.set_defaults(func=run_test)
 
     args = steth.parse_args()

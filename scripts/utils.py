@@ -56,7 +56,7 @@ def parse_response(resp):
 
 class TestBase:
 
-    def __init__(self, args, cw=ConsoleWriter(None, None, None)):
+    def __init__(self, args, cw=ConsoleWriter(None, None)):
         self.args = args
         self.cw = cw
         self.return_code = 0

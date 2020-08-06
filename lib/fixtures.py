@@ -7,33 +7,35 @@ from sclients import SUPPORTED_CLIENTS, InstanceConfig, start_instance, stop_ins
 
 from lib.types import Fixture
 
+DEFAULT_INSTANCE_CONFIG = {
+    'beacon_state_path': 'ssz/single_client_genesis.ssz',
+    'enr': {
+        'enr': 'enr:-LK4QJCIZoViytOOmAzAbdOJODwQ36PhjXwvXlTFTloTzpawVpvPRmtrM6UZdPmOGck5yPZ9AbgmwyZnE3jm4jX0Yx0Bh2F0dG5ldHOIAAAAAAAAAACEZXRoMpBGMkSJAAAAAf__________gmlkgnY0gmlwhH8AAAGJc2VjcDI1NmsxoQOnBq2PcxFfkFACZvJz91cd-UKaTPtLv7zYJSJyAtq60YN0Y3CCIyiDdWRwgiMp',
+        'private_key': 'eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+        'udp': 9001,
+        'tcp': 9000,
+        'id': 'v4',
+        'ip': '127.0.0.1',
+        'attnets': '0x0000000000000000',
+        'eth2': '0x4632448900000001ffffffffffffffff'
+    }
+}
 
-def extract_fixtures(config, clients_to_test=SUPPORTED_CLIENTS) -> List[Fixture]:
-    # turn a yml config into a list of fixtures. if any 'all' in the file, do 1:1 for every one (rather than all
-    # pairwise combos)
-    if any((i['client'] == 'all' for i in config['instances'])):
-        fixtures = []
+def extract_fixtures(clients_to_test=SUPPORTED_CLIENTS) -> List[Fixture]:
+    fixtures = []
+    for client in SUPPORTED_CLIENTS:
+        if client not in clients_to_test:
+            continue
 
-        for client in SUPPORTED_CLIENTS:
-            if client not in clients_to_test:
-                continue
+        instance_config = {
+            **DEFAULT_INSTANCE_CONFIG,
+            'client': client
+        }
 
-            # convert 'all' instances to $client
-            def convert(ic): return ic._replace(client=client) if ic.client == 'all' else ic
+        fixture = Fixture(client, [InstanceConfig.from_dict(instance_config)])
+        fixtures.append(fixture)
 
-            fixture = Fixture(client, [convert(InstanceConfig.from_dict(i)) for i in config['instances']])
-            fixtures.append(fixture)
-
-        return fixtures
-
-    # if any clients in the fixture are not among those specified in clients_to_test, return no fixtures
-    elif any((i['client'] not in clients_to_test for i in config['instances'])):
-        return []
-
-    else:
-        fixture = Fixture(None, [InstanceConfig.from_dict(i) for i in config['instances']])
-        return [fixture]
-
+    return fixtures
 
 def setup_fixture(fixture: Fixture):
     for instance in fixture.instances:
