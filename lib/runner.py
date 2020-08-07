@@ -7,13 +7,13 @@ import trio
 from lib.console import ConsoleWriter
 from lib.instance_configs import DEFAULT_ARGS
 
-TESTS_DIR = 'scripts'
+TESTS_DIR = 'tests'
 
 def all_test_files():
     tests = []
     for root, dirs, files in os.walk(TESTS_DIR):
         # skip files in top-level
-        if root == 'scripts':
+        if root == 'tests':
             continue
 
         tests.extend([f'{root}/{f}' for f in files if f.endswith('.py')])
