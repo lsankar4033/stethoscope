@@ -10,4 +10,4 @@ before_install:
   - pip install -U pip
 
 script:
-  - ./steth.py --help
+  - ./steth.py fixture start lighthouse && docker logs lighthouse && ./steth.py fixture stop
