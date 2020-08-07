@@ -1,0 +1,13 @@
+language: python
+
+python:
+  - 3.8
+
+services:
+  - docker
+
+before_install:
+  - pip install -U pip
+
+script:
+  - ./steth.py --help
