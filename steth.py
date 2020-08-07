@@ -61,6 +61,11 @@ def run_test(args):
                 teardown_fixture(fixture)
 
 
+def run_logging_test(args):
+    for client in SUPPORTED_CLIENTS:
+        print(f'Testing client {client}')
+
+
 if __name__ == '__main__':
     steth = argparse.ArgumentParser(description='Stethoscope tool for running multi-client Eth2 scenarios')
     steth_sub = steth.add_subparsers()
@@ -82,6 +87,9 @@ if __name__ == '__main__':
     test.add_argument('-o', '--only', help='run specific tests by name')
     test.add_argument('-r', '--reuse', default=False, action='store_true', help='reuse running fixtures')
     test.set_defaults(func=run_test)
+
+    test = steth_sub.add_parser('logging_test', help='Display example logs from ./steth.py test. Useful for testing CI integration')
+    test.set_defaults(func=run_logging_test)
 
     args = steth.parse_args()
     args.func(args)
