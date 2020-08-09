@@ -1,6 +1,6 @@
 import os
 
-from lib.runner import run_module, file_to_module
+from lib.runner import run_module, file_to_module, return_code_to_status
 
 LOGGING_TESTS_DIR = 'logging_tests'
 
@@ -13,10 +13,25 @@ def all_logging_test_files():
 
 
 def run_logging_tests(client):
-    # print client, then call run_module for each test. collect all failures and print them at the end
     print(client)
-    for file in all_logging_test_files():
-        # TODO: collect failure
-        run_module(file_to_module(file), {})
 
-    # TODO: print out all failures + logs
+    failures = {}
+    for file in all_logging_test_files():
+        module = file_to_module(file)
+        (return_code, logs) = run_module(module, {})
+
+        print(f'\t{module} {return_code_to_status(return_code)}')
+        if return_code != 0:
+            failures[module] = (return_code, logs)
+
+    if len(failures) > 0:
+        for module, (return_code, logs) in failures.items():
+            print('')
+            print(f'\t{module} {return_code_to_status(return_code)}')
+
+            for log in logs:
+                print(f'\t{log}')
+
+        return 1
+
+    return 0

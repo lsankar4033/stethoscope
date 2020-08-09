@@ -35,12 +35,12 @@ def run_module(module_str, args):
     module = importlib.import_module(module_str)
 
     if not hasattr(module, 'run'):
-        cw.fail(f'module {module} does not have a run method')
+        print(f'\t{module} does not have a run method')
         return
 
-    return_code = trio.run(module.run, args)
+    return_code, logs = trio.run(module.run, args)
 
-    print(f'\t{module_str} {return_code_to_status(return_code)}')
+    return (return_code, logs)
 
 def test_matches_filter(test, test_filter):
     return test_filter is None or test == test_filter

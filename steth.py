@@ -63,9 +63,14 @@ def run_test(args):
 
 
 def run_logging_test(args):
+    failed = False
     for client in SUPPORTED_CLIENTS:
-        run_logging_tests(client)
+        return_code= run_logging_tests(client)
+        if return_code != 0:
+            failed = True
 
+    if failed:
+        exit(1)
 
 if __name__ == '__main__':
     steth = argparse.ArgumentParser(description='Stethoscope tool for running multi-client Eth2 scenarios')
