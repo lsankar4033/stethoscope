@@ -8,6 +8,7 @@ from sclients import SUPPORTED_CLIENTS, stop_instance
 from lib.console import ConsoleWriter
 from lib.fixtures import extract_fixtures, setup_fixture, teardown_fixture
 from lib.runner import run_all_tests
+from lib.logging_tests import run_logging_tests
 
 
 def run_start_fixture(args):
@@ -63,7 +64,7 @@ def run_test(args):
 
 def run_logging_test(args):
     for client in SUPPORTED_CLIENTS:
-        print(f'Testing client {client}')
+        run_logging_tests(client)
 
 
 if __name__ == '__main__':
