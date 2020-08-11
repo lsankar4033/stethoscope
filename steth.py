@@ -8,6 +8,7 @@ from sclients import SUPPORTED_CLIENTS, stop_instance
 from lib.console import ConsoleWriter
 from lib.fixtures import extract_fixtures, setup_fixture, teardown_fixture
 from lib.runner import run_all_tests
+from lib.logging_tests import run_logging_tests
 
 
 def run_start_fixture(args):
@@ -61,6 +62,16 @@ def run_test(args):
                 teardown_fixture(fixture)
 
 
+def run_logging_test(args):
+    failed = False
+    for client in SUPPORTED_CLIENTS:
+        return_code= run_logging_tests(client)
+        if return_code != 0:
+            failed = True
+
+    if failed:
+        exit(1)
+
 if __name__ == '__main__':
     steth = argparse.ArgumentParser(description='Stethoscope tool for running multi-client Eth2 scenarios')
     steth_sub = steth.add_subparsers()
@@ -82,6 +93,9 @@ if __name__ == '__main__':
     test.add_argument('-o', '--only', help='run specific tests by name')
     test.add_argument('-r', '--reuse', default=False, action='store_true', help='reuse running fixtures')
     test.set_defaults(func=run_test)
+
+    test = steth_sub.add_parser('logging_test', help='Display example logs from ./steth.py test. Useful for testing CI integration')
+    test.set_defaults(func=run_logging_test)
 
     args = steth.parse_args()
     args.func(args)
