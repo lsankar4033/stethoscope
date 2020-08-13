@@ -6,7 +6,6 @@ import trio
 from colored import fg
 
 from lib.console import ConsoleWriter
-from lib.instance_configs import DEFAULT_ARGS
 
 TESTS_DIR = 'tests'
 
@@ -42,12 +41,29 @@ def run_module(module_str, args):
 
     return (return_code, logs)
 
-def test_matches_filter(test, test_filter):
-    return test_filter is None or test == test_filter
+def file_matches_filter(file, file_filter):
+    return file_filter is None or file == file_filter
 
-def run_all_tests(cw=ConsoleWriter(None, None), test_filter=None):
-    for test_file in all_test_files():
-        if test_matches_filter(test_file, test_filter):
-            cw = cw._replace(test=file_to_module(test_file))
+def run_test_files(fixture_name, files, args):
+    print(fixture_name)
 
-            run_module(file_to_module(test_file), DEFAULT_ARGS)
+    failures = {}
+    for file in files:
+        module = file_to_module(file)
+        (return_code, logs) = run_module(module, {**args, 'client': fixture_name})
+
+        print(f'\t{module} {return_code_to_status(return_code)}')
+        if return_code != 0:
+            failures[module] = (return_code, logs)
+
+    if len(failures) > 0:
+        for module, (return_code, logs) in failures.items():
+            print('')
+            print(f'\t{module} {return_code_to_status(return_code)}')
+
+            for log in logs:
+                print(f'\t{log}')
+
+        return 1
+
+    return 0

@@ -26,10 +26,6 @@ def extract_fixtures(clients_to_test=SUPPORTED_CLIENTS) -> List[Fixture]:
 
 def setup_fixture(fixture: Fixture):
     for instance in fixture.instances:
-        if instance.client not in SUPPORTED_CLIENTS:
-            raise ValueError(
-                f"can't start instance: client {instance_config.client} not supported yet")
-
         start_instance(instance)
 
 
