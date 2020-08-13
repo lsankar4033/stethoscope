@@ -13,6 +13,15 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/lsankar4033/stethoscope",
     packages=setuptools.find_packages(),
+    install_requires=[
+        # NOTE: to be consistent with pyrum's versions
+        "trio==0.13.0",
+        "pyrum>=0.3.0,<0.4.0",
+        "stethoscope-clients==0.1.5",
+        "PyYAML==5.3.1",
+        "colored==1.4.2",
+        "eth-utils==1.8.4",
+    ],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
