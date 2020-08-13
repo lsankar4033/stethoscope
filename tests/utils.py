@@ -1,11 +1,8 @@
-import argparse
 import sys
 import trio
 
 from eth2spec.utils.ssz.ssz_typing import Container
 from pyrum import SubprocessConn, Rumor
-
-from lib.console import ConsoleWriter
 
 def with_rumor(async_run_fn):
     async def wrapped_run_fn(args):
@@ -20,17 +17,6 @@ def with_rumor(async_run_fn):
                     nursery.cancel_scope.cancel()
 
     return wrapped_run_fn
-
-
-def parse_args(*args):
-    parser = argparse.ArgumentParser()
-    req_grp = parser.add_argument_group(title='required')
-
-    for arg in args:
-        req_grp.add_argument(arg, required=True)
-
-    return parser.parse_args()
-
 
 def compare_containers(expected: Container, actual: Container):
     if expected != actual:
