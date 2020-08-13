@@ -1,4 +1,5 @@
 # NOTE: we may have multiple configs here identified by name in the future
+from sclients import ENR
 
 DEFAULT_BEACON_STATE_PATH = 'ssz/default.ssz'
 DEFAULT_ENR =  {
@@ -16,4 +17,7 @@ DEFAULT_INSTANCE_CONFIG = {
     'beacon_state_path': DEFAULT_BEACON_STATE_PATH,
     'enr': DEFAULT_ENR
 }
-DEFAULT_ARGS = DEFAULT_INSTANCE_CONFIG
+DEFAULT_ARGS = {
+    'beacon_state_path': DEFAULT_BEACON_STATE_PATH,
+    'enr': ENR(**DEFAULT_ENR)
+}
