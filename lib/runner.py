@@ -3,9 +3,7 @@ import os
 import subprocess
 
 import trio
-from colored import fg
-
-from lib.console import ConsoleWriter
+from colors import color
 
 TESTS_DIR = 'tests'
 
@@ -25,10 +23,10 @@ def file_to_module(script):
 
 def return_code_to_status(return_code):
     if return_code == 0:
-        return f"{fg('green')}\u2713{fg('white')}"
+        return color('\u2713', fg='green')
 
     else:
-        return f"{fg('red')}\u2717{fg('white')}"
+        return color('\u2717', fg='red')
 
 def run_module(module_str, args):
     module = importlib.import_module(module_str)

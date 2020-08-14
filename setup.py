@@ -19,7 +19,7 @@ setuptools.setup(
         "pyrum>=0.3.0,<0.4.0",
         "stethoscope-clients==0.1.5",
         "PyYAML==5.3.1",
-        "colored==1.4.2",
+        "ansicolors==1.1.8",
         "eth-utils==1.8.4",
     ],
     classifiers=[

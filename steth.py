@@ -13,20 +13,15 @@ from lib.logging_tests import all_logging_test_files
 
 def run_start_fixture_cmd(args):
     client = args.client
-    cw = ConsoleWriter(None, None)
 
     fixtures = extract_fixtures([client])
 
     for fixture in fixtures:
-        cw = cw._replace(fixture=fixture.name)
-        cw.info('setting up fixture')
         setup_fixture(fixture)
 
 
 def run_stop_fixture_cmd(args):
-    cw = ConsoleWriter(None, None)
     for client in SUPPORTED_CLIENTS:
-        cw.info(f'stopping client {client}')
         stop_instance(client)
 
 
