@@ -9,5 +9,10 @@ services:
 before_install:
   - pip install -U pip
 
+install:
+  - cp ./bin/rumor-v0.2.3-linux-amd64 ./bin/rumor # move rumor into place for test discovery
+  - pip install .
+  - pip install -r requirements.txt
+
 script:
-  - ./steth.py logging_test
+  - ./steth.py test -o tests/reqresp/ping.py

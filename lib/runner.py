@@ -57,12 +57,15 @@ def run_test_files(fixture_name, files, args):
             failures[module] = (return_code, logs)
 
     if len(failures) > 0:
+        print('')
+        print('--failures--')
         for module, (return_code, logs) in failures.items():
-            print('')
             print(f'\t{module} {return_code_to_status(return_code)}')
 
             for log in logs:
-                print(f'\t{log}')
+                print(f'\t\t{log}')
+
+            print('')
 
         return 1
 

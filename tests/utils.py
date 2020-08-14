@@ -6,7 +6,7 @@ from pyrum import SubprocessConn, Rumor
 
 def with_rumor(async_run_fn):
     async def wrapped_run_fn(args):
-        async with SubprocessConn(cmd='rumor bare --level=trace') as conn:
+        async with SubprocessConn(cmd='./bin/rumor bare --level=trace') as conn:
             async with trio.open_nursery() as nursery:
                 try:
                     rumor = Rumor(conn, nursery)
@@ -18,24 +18,11 @@ def with_rumor(async_run_fn):
 
     return wrapped_run_fn
 
-def compare_containers(expected: Container, actual: Container):
-    if expected != actual:
-        error_str = ''
-        for field in expected.fields():
-            compare_vals(getattr(expected, field), getattr(actual, field), field)
+def parse_chunk_response(resp):
+    if not(resp['result_code'] == 0):
+        return (None, [f"request error: {resp['msg']}"])
 
+    if 'data' not in resp:
+        return (None, [f"request error: 'data' field not in response"])
 
-def compare_vals(expected, actual, name):
-    if expected != actual:
-        print(
-            f'{name} -- expected {expected} actual {actual}',
-            file=sys.stderr
-        )
-
-
-# NOTE: Eventually, return code will be handled on an object
-def parse_response(resp):
-    if not('chunk' in resp and 'data' in resp['chunk']):
-        return (1, None)
-
-    return (0, resp['chunk']['data'])
+    return (resp['data'], [])
