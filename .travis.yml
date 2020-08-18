@@ -15,4 +15,4 @@ install:
   - pip install -r requirements.txt
 
 script:
-  - ./steth.py test -o tests/reqresp/ping.py
+  - ./steth.py test
