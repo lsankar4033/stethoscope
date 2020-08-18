@@ -26,3 +26,10 @@ def parse_chunk_response(resp):
         return (None, [f"request error: 'data' field not in response"])
 
     return (resp['data'], [])
+
+def enr_to_fork_digest(enr):
+    eth2 = enr.eth2
+    eth2 = eth2[2:] if eth2.startswith('0x') else eth2
+
+    fork_digest_hex = eth2[:8]
+    return bytes.fromhex(fork_digest_hex[:8])

@@ -1,45 +1,51 @@
-from eth2spec.utils.ssz.ssz_typing import (
-    Bytes4, Bytes32, Container, uint64
-)
-from pyrum import SubprocessConn, Rumor
+from eth2spec.utils.ssz.ssz_typing import Container
+from eth2spec.phase0.spec import Slot, Root, Epoch, ForkDigest
 from sclients import connect_rumor
-import trio
 
-from ..utils import *
-
-
-class Request(Container):
-    version: Bytes4
-    finalized_root: Bytes32
-    finalized_epoch: uint64
-    head_root: Bytes32
-    head_slot: uint64
+from ..utils import parse_chunk_response, with_rumor, enr_to_fork_digest
 
 
-async def test_status(enr, beacon_state_path):
-    async with SubprocessConn(cmd='rumor bare') as conn:
-        async with trio.open_nursery() as nursery:
-            rumor = Rumor(conn, nursery)
-            peer_id = await connect_rumor(rumor, enr)
+class Status(Container):
+    fork_digest: ForkDigest
+    finalized_root: Root
+    finalized_epoch: Epoch
+    head_root: Root
+    head_slot: Slot
 
-            req = Request(head_slot=0).encode_bytes().hex()
-            resp = await rumor.rpc.status.req.raw(peer_id, req, raw=True, compression='snappy')
-            resp_data = parse_response(resp)
 
-            if resp_data is not None:
-                resp_status = Request.decode_bytes(bytes.fromhex(resp_data))
+@with_rumor
+async def run(rumor, args):
+    peer_id = await connect_rumor(rumor, args['client'], args['enr'])
 
-                compare_containers(
-                    Request(
-                        version=resp_status.version,
-                        finalized_root='0x0000000000000000000000000000000000000000000000000000000000000000',
-                        head_root='0xef64a1b94652cd9070baa4f9c0e8b1ce624bdb071b77b51b1a54b8babb1a5cd2',
-                    ),
-                    resp_status
-                )
+    logs = []
+    return_code = 0
 
-            nursery.cancel_scope.cancel()
+    fork_digest = enr_to_fork_digest(args['enr'])
+    req_data = Status(fork_digest=fork_digest).encode_bytes().hex()
+    req_call = rumor.rpc.status.req.raw(peer_id, req_data, raw=True, compression='snappy')
+    await req_call
+    await req_call.next()
+    resp = await req_call.next()
 
-if __name__ == '__main__':
-    args = parse_args('--enr', '--beacon_state_path')
-    trio.run(test_status, args.enr, args.beacon_state_path)
+    (resp_data, l) = parse_chunk_response(resp)
+    logs.extend(l)
+    if resp_data is None:
+        return_code = 1
+
+    else:
+        resp_status = Status.decode_bytes(bytes.fromhex(resp_data))
+
+        # TODO: make these dependent on beacon_state
+        expected_status = Status(
+            fork_digest=fork_digest,
+            finalized_root='0x0000000000000000000000000000000000000000000000000000000000000000',
+            finalized_epoch=0,
+            head_root='0x2227ce1b4e15c6320d493998fab783190a50e71d1075af73ce4e9ccc0dc84bca',
+            head_slot=0
+        )
+
+        if resp_status != expected_status:
+            logs.append(f'response error: expected {expected_status}, got {resp_status}')
+            return_code = 1
+
+    return (return_code, logs)
