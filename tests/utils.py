@@ -19,9 +19,6 @@ def with_rumor(async_run_fn):
     return wrapped_run_fn
 
 def parse_chunk_response(resp):
-    if not(resp['result_code'] == 0):
-        return (None, [f"request error: {resp['msg']}"])
-
     if 'data' not in resp:
         return (None, [f"request error: 'data' field not in response"])
 
