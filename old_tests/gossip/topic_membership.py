@@ -6,6 +6,7 @@ from ..utils import parse_args
 
 import trio
 
+# TODO: add ForkDigestValue
 EXPECTED_TOPICS = ["/eth2/beacon_block/ssz", "/eth2/beacon_attestation/ssz", "/eth2/voluntary_exit/ssz",
                    "/eth2/proposer_slashing/ssz", "/eth2/attester_slashing/ssz"]
 
