@@ -22,10 +22,6 @@ def default_builder():
     eth1_timestamp = spec.MIN_GENESIS_TIME
     state = initialize_beacon_state_from_eth1(eth1_block_hash, eth1_timestamp, deposits)
 
-    os.makedirs(os.path.dirname(path), exist_ok=True)
-    with open(path, 'wb') as w:
-        state.serialize(w)
-
     return state
 
 
