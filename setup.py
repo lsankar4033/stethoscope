@@ -21,6 +21,8 @@ setuptools.setup(
         "PyYAML==5.3.1",
         "ansicolors==1.1.8",
         "eth-utils==1.8.4",
+        "eth2spec>=0.12.2",
+        "eth2fastspec==0.0.5"
     ],
     classifiers=[
         "Programming Language :: Python :: 3",
