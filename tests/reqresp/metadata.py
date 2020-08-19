@@ -3,6 +3,7 @@ from sclients import connect_rumor
 
 from ..utils import parse_chunk_response, with_rumor
 
+
 class Metadata(Container):
     seq_number: uint64
     attnets: Bitvector[64]

@@ -7,6 +7,7 @@ from colors import color
 
 TESTS_DIR = 'tests'
 
+
 def all_test_files():
     tests = []
     for root, dirs, files in os.walk(TESTS_DIR):
@@ -18,8 +19,10 @@ def all_test_files():
 
     return tests
 
+
 def file_to_module(script):
     return script.replace('/', '.')[0:-3]
+
 
 def return_code_to_status(return_code):
     if return_code == 0:
@@ -27,6 +30,7 @@ def return_code_to_status(return_code):
 
     else:
         return color('\u2717', fg='red')
+
 
 def run_module(module_str, args):
     module = importlib.import_module(module_str)
@@ -39,8 +43,10 @@ def run_module(module_str, args):
 
     return (return_code, logs)
 
+
 def file_matches_filter(file, file_filter):
     return file_filter is None or file == file_filter
+
 
 def run_test_files(fixture_name, files, args):
     print(fixture_name)

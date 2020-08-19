@@ -4,6 +4,7 @@ from lib.runner import run_module, file_to_module, return_code_to_status
 
 LOGGING_TESTS_DIR = 'logging_tests'
 
+
 def all_logging_test_files():
     tests = []
     for root, dirs, files in os.walk(LOGGING_TESTS_DIR):

@@ -4,6 +4,7 @@ import trio
 from eth2spec.utils.ssz.ssz_typing import Container
 from pyrum import SubprocessConn, Rumor
 
+
 def with_rumor(async_run_fn):
     async def wrapped_run_fn(args):
         async with SubprocessConn(cmd='./bin/rumor bare --level=trace') as conn:
@@ -18,11 +19,13 @@ def with_rumor(async_run_fn):
 
     return wrapped_run_fn
 
+
 def parse_chunk_response(resp):
     if 'data' not in resp:
         return (None, [f"request error: 'data' field not in response"])
 
     return (resp['data'], [])
+
 
 def enr_to_fork_digest(enr):
     eth2 = enr.eth2

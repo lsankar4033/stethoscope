@@ -8,6 +8,7 @@ from sclients import SUPPORTED_CLIENTS, InstanceConfig, start_instance, stop_ins
 from lib.instance_configs import DEFAULT_INSTANCE_CONFIG
 from lib.types import Fixture
 
+
 def extract_fixtures(clients_to_test=SUPPORTED_CLIENTS) -> List[Fixture]:
     fixtures = []
     for client in SUPPORTED_CLIENTS:
@@ -23,6 +24,7 @@ def extract_fixtures(clients_to_test=SUPPORTED_CLIENTS) -> List[Fixture]:
         fixtures.append(fixture)
 
     return fixtures
+
 
 def setup_fixture(fixture: Fixture):
     for instance in fixture.instances:
