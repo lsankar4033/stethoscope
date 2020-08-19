@@ -28,3 +28,7 @@ def default_builder():
 BEACON_STATE_BUILDERS = {
     BeaconState.DEFAULT: default_builder
 }
+
+BEACON_STATE_PATHS = {
+    BeaconState.DEFAULT: 'ssz/default.ssz'
+}
