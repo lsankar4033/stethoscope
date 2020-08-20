@@ -5,7 +5,6 @@ import os
 import yaml
 from sclients import SUPPORTED_CLIENTS, start_instance, stop_instance
 
-from lib.fixtures import extract_fixtures, setup_fixture, teardown_fixture
 from lib.instance_configs import DEFAULT_ARGS
 from lib.runner import run_test_files
 from lib.logging_tests import get_logging_test_groups
