@@ -5,20 +5,6 @@ import subprocess
 import trio
 from colors import color
 
-TESTS_DIR = 'tests'
-
-
-def all_test_files():
-    tests = []
-    for root, dirs, files in os.walk(TESTS_DIR):
-        # skip files in top-level
-        if root == 'tests':
-            continue
-
-        tests.extend([f'{root}/{f}' for f in files if f.endswith('.py')])
-
-    return tests
-
 
 def file_to_module(script):
     return script.replace('/', '.')[0:-3]
@@ -42,10 +28,6 @@ def run_module(module_str, args):
     return_code, logs = trio.run(module.run, args)
 
     return (return_code, logs)
-
-
-def file_matches_filter(file, file_filter):
-    return file_filter is None or file == file_filter
 
 
 def run_test_files(client, files, args):
