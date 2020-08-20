@@ -48,18 +48,17 @@ def file_matches_filter(file, file_filter):
     return file_filter is None or file == file_filter
 
 
-def run_test_files(fixture_name, files, args):
-    print(fixture_name)
-
+def run_test_files(client, files, args):
     failures = {}
     for file in files:
         module = file_to_module(file)
-        (return_code, logs) = run_module(module, {**args, 'client': fixture_name})
+        (return_code, logs) = run_module(module, {**args, 'client': client})
 
         print(f'\t{module} {return_code_to_status(return_code)}')
         if return_code != 0:
             failures[module] = (return_code, logs)
 
+    # TODO: report all errors *at the end* of test run
     if len(failures) > 0:
         print('')
         print('--failures--')

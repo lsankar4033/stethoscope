@@ -3,12 +3,12 @@
 import argparse
 import os
 import yaml
-from sclients import SUPPORTED_CLIENTS, stop_instance
+from sclients import SUPPORTED_CLIENTS
 
 from lib.fixtures import extract_fixtures, setup_fixture, teardown_fixture
 from lib.instance_configs import DEFAULT_ARGS
 from lib.runner import run_test_files, all_test_files, file_matches_filter
-from lib.logging_tests import all_logging_test_files
+from lib.logging_tests import get_logging_test_groups
 
 
 def run_test_cmd(args):
@@ -16,6 +16,7 @@ def run_test_cmd(args):
 
     file_filter = args.only
 
+    # TODO: use test groups!
     test_files = [file for file in all_test_files() if file_matches_filter(file, file_filter)]
     fixtures = extract_fixtures(clients)
     failed = False
@@ -38,11 +39,13 @@ def run_test_cmd(args):
 
 
 def run_logging_test(args):
-    test_files = all_logging_test_files()
+    test_groups = get_logging_test_groups()
 
     failed = False
-    for client in SUPPORTED_CLIENTS:
-        return_code = run_test_files(client, test_files, {})
+    for test_group in test_groups:
+        print(test_group)
+
+        return_code = run_test_files(test_group.instance_config.client, test_group.test_files, {})
         if return_code != 0:
             failed = True
 

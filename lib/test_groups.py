@@ -18,6 +18,9 @@ class TestGroup(NamedTuple):
     test_files: List[str]
     instance_config: InstanceConfig
 
+    def __str__(self):
+        return f'{self.instance_config.client} - {self.instance_config.beacon_state_path}'
+
 
 # TODO: allow for comma-separated test filter
 def file_matches_filter(file, file_filter):
@@ -25,9 +28,9 @@ def file_matches_filter(file, file_filter):
 
 
 # NOTE: this file does sorting
-def get_test_groups(clients, test_file_filter) -> List[TestGroup]:
+def get_test_groups(test_file_to_configs, clients, test_file_filter) -> List[TestGroup]:
     client_path_to_test_files = defaultdict(list)
-    for test_file, beacon_states in TEST_FILE_TO_CONFIGS.items():
+    for test_file, beacon_states in test_file_to_configs.items():
         if file_matches_filter(test_file, test_file_filter):
             for client in clients:
                 for beacon_state in beacon_states:
