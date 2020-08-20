@@ -1,7 +1,7 @@
 from collections import defaultdict
 from typing import List, NamedTuple
 
-from sclients import InstanceConfig
+from sclients import InstanceConfig, ENR
 
 from lib.instance_configs import DEFAULT_ENR
 from lib.beacon_state import BeaconState, BEACON_STATE_PATHS
@@ -39,7 +39,7 @@ def get_test_groups(test_file_to_configs, clients, test_file_filter) -> List[Tes
 
     test_groups = []
     for (client, beacon_state_path), test_files in client_path_to_test_files.items():
-        instance_config = InstanceConfig(client, beacon_state_path, DEFAULT_ENR)
+        instance_config = InstanceConfig(client, beacon_state_path, ENR(**DEFAULT_ENR))
         test_groups.append(TestGroup(test_files, instance_config))
 
     test_groups.sort(key=lambda tg: (tg.instance_config.client, tg.instance_config.beacon_state_path))
