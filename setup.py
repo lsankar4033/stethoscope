@@ -17,7 +17,7 @@ setuptools.setup(
         # NOTE: to be consistent with pyrum's versions
         "trio==0.13.0",
         "pyrum>=0.3.0,<0.4.0",
-        "stethoscope-clients==0.1.6",
+        "stethoscope-clients==0.1.7",
         "PyYAML==5.3.1",
         "ansicolors==1.1.8",
         "eth-utils==1.8.4",
