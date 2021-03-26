@@ -18,7 +18,7 @@ setuptools.setup(
         "trio==0.13.0",
         "pyrum>=0.3.0,<0.4.0",
         "stethoscope-clients==0.1.7",
-        "PyYAML==5.3.1",
+        "PyYAML==5.4",
         "ansicolors==1.1.8",
         "eth-utils==1.8.4",
         "eth2fastspec==0.0.5"
